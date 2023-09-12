@@ -21,7 +21,7 @@ export function Sidebar({ onClose }: Props) {
 
   return (
     <div className={styles.sidebarWrapper}>
-      <div className={styles.sidebar}>
+      <div className={styles.sidebar} data-scrollbar="thin">
         <div className={styles.sidebarTop}>
           <div className={styles.sidebarThreadsResolved}>
             {resolvedThreadCount === threads.length ? (

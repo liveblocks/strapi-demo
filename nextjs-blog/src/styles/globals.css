@@ -156,3 +156,23 @@ body,
   white-space: nowrap;
   border-width: 0;
 }
+
+[data-scrollbar="thin"] {
+  scrollbar-width: thin;
+}
+
+[data-scrollbar="thin"]::-webkit-scrollbar {
+  width: 10px;
+}
+
+[data-scrollbar="thin"]::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+[data-scrollbar="thin"]::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+[data-scrollbar="thin"]::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
