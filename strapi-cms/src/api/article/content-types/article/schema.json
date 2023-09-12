@@ -33,6 +33,11 @@
       "relation": "manyToMany",
       "target": "plugin::users-permissions.user",
       "inversedBy": "articles"
+    },
+    "Slug": {
+      "type": "uid",
+      "required": true,
+      "targetField": "Title"
     }
   }
 }

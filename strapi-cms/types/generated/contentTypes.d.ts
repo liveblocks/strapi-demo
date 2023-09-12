@@ -382,6 +382,7 @@ export interface ApiArticleArticle extends Schema.CollectionType {
       'manyToMany',
       'plugin::users-permissions.user'
     >;
+    Slug: Attribute.UID<'api::article.article', 'Title'> & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

@@ -7,9 +7,13 @@ export async function ArticleList() {
     <div className={styles.articleList}>
       {articles.map(({ id, attributes }) => {
         const date = new Date(attributes.Date);
+        console.log(attributes);
         return (
           <article key={id}>
-            <div className={styles.articleInfo}>
+            <a
+              className={styles.articleInfo}
+              href={`/article/${attributes.Slug}`}
+            >
               <time
                 dateTime={date.toISOString()}
                 className={styles.articleDate}
@@ -31,7 +35,7 @@ export async function ArticleList() {
               {/*    ))}*/}
               {/*  </div>*/}
               {/*) : null}*/}
-            </div>
+            </a>
           </article>
         );
       })}

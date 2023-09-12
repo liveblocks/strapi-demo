@@ -14,6 +14,7 @@ export interface Article {
     Content: string;
     Date: Date;
     authors?: { data: User[] };
+    Slug: string;
   };
 }
 export interface Article_Plain {
@@ -26,6 +27,7 @@ export interface Article_Plain {
   Content: string;
   Date: Date;
   authors?: User_Plain[];
+  Slug: string;
 }
 
 export interface Article_NoRelations {
@@ -38,6 +40,7 @@ export interface Article_NoRelations {
   Content: string;
   Date: Date;
   authors?: number[];
+  Slug: string;
 }
 
 export interface Article_AdminPanelLifeCycle {
@@ -50,4 +53,5 @@ export interface Article_AdminPanelLifeCycle {
   Content: string;
   Date: Date;
   authors?: AdminPanelRelationPropertyModification<User_Plain>;
+  Slug: string;
 }
