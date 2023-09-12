@@ -1,15 +1,16 @@
-import Room from "./Room";
+import { Room } from "@/components/Room";
 import { PageArticle } from "@/components/PageArticle";
+import { PreviewToolbar } from "@/components/PreviewToolbar";
 
-export default function Page({
+export default async function Article({
   params,
 }: {
   params: { slug: string };
-  searchParams: { [key: string]: string | string[] | undefined };
 }) {
   return (
     <Room>
       <PageArticle slug={params.slug} />
+      <PreviewToolbar />
     </Room>
   );
 }

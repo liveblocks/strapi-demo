@@ -1,0 +1,9 @@
+.toolbar {
+  position: fixed;
+  margin: 0 auto;
+  bottom: var(--space-10);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-surface);
+  color: var(--color-text);
+}

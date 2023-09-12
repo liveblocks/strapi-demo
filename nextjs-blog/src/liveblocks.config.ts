@@ -41,6 +41,7 @@ type RoomEvent = {
 export const {
   suspense: {
     RoomProvider,
+    useThreads,
     useRoom,
     useMyPresence,
     useUpdateMyPresence,
@@ -66,4 +67,18 @@ export const {
     useStatus,
     useLostConnectionListener,
   },
-} = createRoomContext<Presence, Storage, UserMeta, RoomEvent>(client);
+} = createRoomContext<Presence, Storage, UserMeta, RoomEvent>(client, {
+  async resolveUser({ userId }) {
+    const response = await fetch(`/api/user/${encodeURIComponent(userId)}`);
+
+    if (!response.ok) {
+      throw new Error("Problem resolving user");
+    }
+
+    const user = await response.json();
+    return user.info;
+  },
+  async resolveMentionSuggestions({ text }) {
+    return [];
+  },
+});

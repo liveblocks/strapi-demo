@@ -1,4 +1,5 @@
 @import "./normalize.css";
+@import "@liveblocks/react-comments/styles.css";
 
 :root {
   --color-black: 0 0 0;
@@ -80,7 +81,9 @@
 }
 
 /* Light theme */
-:root {
+[data-theme="light"],
+[data-theme="dark"] [data-reverse-theme],
+[data-theme="light"] [data-reverse-theme] [data-reverse-theme] {
   --color-red: 239 67 67;
   --color-green: 132 204 22;
   --color-accent: rgb(var(--color-gray-900));
@@ -104,26 +107,26 @@
 }
 
 /* Dark theme */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-red: 248 113 113;
-    --color-green: 162 230 53;
-    --color-accent: rgb(var(--color-white));
-    --color-surface: rgb(var(--color-gray-850));
-    --color-surface-hover: rgb(var(--color-gray-800));
-    --color-surface-elevated: rgb(var(--color-gray-950));
-    --color-border: rgb(var(--color-gray-750));
-    --color-border-contrasted: rgb(var(--color-gray-650));
-    --color-border-transparent: rgb(var(--color-white) / 10%);
-    --color-skeleton: rgb(var(--color-gray-750));
-    --color-skeleton-shine: rgb(var(--color-gray-850));
-    --color-text: rgb(var(--color-white));
-    --color-text-light: rgb(var(--color-gray-300));
-    --color-text-lighter: rgb(var(--color-gray-400));
-    --color-text-lightest: rgb(var(--color-gray-500));
+[data-theme="dark"],
+[data-theme="light"] [data-reverse-theme],
+[data-theme="dark"] [data-reverse-theme] [data-reverse-theme] {
+  --color-red: 248 113 113;
+  --color-green: 162 230 53;
+  --color-accent: rgb(var(--color-white));
+  --color-surface: rgb(var(--color-gray-850));
+  --color-surface-hover: rgb(var(--color-gray-800));
+  --color-surface-elevated: rgb(var(--color-gray-950));
+  --color-border: rgb(var(--color-gray-750));
+  --color-border-contrasted: rgb(var(--color-gray-650));
+  --color-border-transparent: rgb(var(--color-white) / 10%);
+  --color-skeleton: rgb(var(--color-gray-750));
+  --color-skeleton-shine: rgb(var(--color-gray-850));
+  --color-text: rgb(var(--color-white));
+  --color-text-light: rgb(var(--color-gray-300));
+  --color-text-lighter: rgb(var(--color-gray-400));
+  --color-text-lightest: rgb(var(--color-gray-500));
 
-    color-scheme: dark;
-  }
+  color-scheme: dark;
 }
 
 html,

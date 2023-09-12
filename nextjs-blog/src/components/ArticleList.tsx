@@ -1,4 +1,4 @@
-import { getArticles } from "@/strapi";
+import { getArticles } from "@/lib/strapi";
 import styles from "./ArticleList.module.css";
 
 export async function ArticleList() {
@@ -7,13 +7,9 @@ export async function ArticleList() {
     <div className={styles.articleList}>
       {articles.map(({ id, attributes }) => {
         const date = new Date(attributes.Date);
-        console.log(attributes);
         return (
           <article key={id}>
-            <a
-              className={styles.articleInfo}
-              href={`/article/${attributes.Slug}`}
-            >
+            <div className={styles.articleInfo}>
               <time
                 dateTime={date.toISOString()}
                 className={styles.articleDate}
@@ -24,7 +20,9 @@ export async function ArticleList() {
                   year: "numeric",
                 })}
               </time>
-              <h2 className={styles.articleTitle}>{attributes.Title}</h2>
+              <h2 className={styles.articleTitle}>
+                <a href={`/article/${attributes.Slug}`}>{attributes.Title}</a>
+              </h2>
               <p className={styles.articleDescription}>
                 {attributes.Description}
               </p>
@@ -35,7 +33,7 @@ export async function ArticleList() {
               {/*    ))}*/}
               {/*  </div>*/}
               {/*) : null}*/}
-            </a>
+            </div>
           </article>
         );
       })}

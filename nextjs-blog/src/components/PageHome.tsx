@@ -1,6 +1,6 @@
 import { ArticleList } from "@/components/ArticleList";
 import styles from "./PageHome.module.css";
-import { getMarketingText } from "@/strapi";
+import { getMarketingText } from "@/lib/strapi";
 
 export async function PageHome() {
   const marketingText = await getMarketingText();

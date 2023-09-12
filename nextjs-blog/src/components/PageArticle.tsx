@@ -1,5 +1,5 @@
 import styles from "./PageArticle.module.css";
-import { getArticle } from "@/strapi";
+import { getArticle } from "@/lib/strapi";
 
 type Props = {
   slug: string;
