@@ -4,6 +4,7 @@
   bottom: var(--space-10);
   left: 50%;
   transform: translateX(-50%);
-  background: var(--color-surface);
-  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  background: var(--surface-backdrop);
 }

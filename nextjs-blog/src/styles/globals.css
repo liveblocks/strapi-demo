@@ -67,7 +67,9 @@
   --shadow: 0 3px 10px rgb(var(--color-black) / 5%);
   --shadow-lg: 0 4px 20px rgb(var(--color-black) / 5%);
   --shadow-xl: 0 5px 30px rgb(var(--color-black) / 5%);
-  --backdrop-surface: saturate(2) blur(16px);
+  --surface-backdrop: rgb(127 127 127 / 0.05);
+  --surface-backdrop-hover: rgb(127 127 127 / 0.08);
+  --surface-backdrop-elevated: rgb(127 127 127 / 0.01);
   --transition: 0.15s ease-in-out;
   --transition-linear: 0.15s linear;
   --header-height: 60px;
@@ -125,7 +127,6 @@
   --color-text-light: rgb(var(--color-gray-300));
   --color-text-lighter: rgb(var(--color-gray-400));
   --color-text-lightest: rgb(var(--color-gray-500));
-
   color-scheme: dark;
 }
 

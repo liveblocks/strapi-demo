@@ -1,4 +1,4 @@
-import { ArticleList } from "@/components/ArticleList";
+import { ArticleList } from "./ArticleList";
 import styles from "./PageHome.module.css";
 import { getMarketingText } from "@/lib/strapi";
 

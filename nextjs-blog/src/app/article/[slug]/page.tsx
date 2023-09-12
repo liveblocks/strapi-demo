@@ -1,6 +1,6 @@
-import { Room } from "@/components/Room";
-import { PageArticle } from "@/components/PageArticle";
-import { PreviewToolbar } from "@/components/PreviewToolbar";
+import { Room } from "@/components/assorted/Room";
+import { PageArticle } from "@/components/assorted/PageArticle";
+import { Comments } from "@/components/comments/Comments";
 
 export default async function Article({
   params,
@@ -10,7 +10,7 @@ export default async function Article({
   return (
     <Room>
       <PageArticle slug={params.slug} />
-      <PreviewToolbar />
+      <Comments />
     </Room>
   );
 }
