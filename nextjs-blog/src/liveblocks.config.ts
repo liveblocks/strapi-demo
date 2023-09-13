@@ -39,7 +39,7 @@ type RoomEvent = {
 };
 
 // Metadata attached to comments
-type CommentMetadata = {
+export type ThreadMetadata = {
   x: number;
   y: number;
   resolved: boolean;
@@ -80,7 +80,7 @@ export const {
     useStatus,
     useLostConnectionListener,
   },
-} = createRoomContext<Presence, Storage, UserMeta, RoomEvent, CommentMetadata>(
+} = createRoomContext<Presence, Storage, UserMeta, RoomEvent, ThreadMetadata>(
   client,
   {
     async resolveUser({ userId }) {

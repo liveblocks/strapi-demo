@@ -1,7 +1,8 @@
 .composer {
   position: absolute;
-  width: 500px;
+  width: 300px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-lg);
+  font-size: var(--size-sm);
 }

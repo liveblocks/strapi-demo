@@ -72,3 +72,7 @@ export function getRandomUser() {
 export function getUser(id: string) {
   return USER_INFO.find((u) => u.id === id) || null;
 }
+
+export function getUsers() {
+  return USER_INFO;
+}

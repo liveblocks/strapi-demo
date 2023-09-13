@@ -1,7 +1,7 @@
 "use client";
 
 import { ClientSideSuspense } from "@liveblocks/react";
-import { Canvas } from "@/components/comments/Canvas";
+import { Overlay } from "@/components/comments/Overlay";
 import { Toolbar } from "@/components/comments/Toolbar";
 
 export function Comments() {
@@ -10,7 +10,7 @@ export function Comments() {
       {() => (
         <>
           <Toolbar />
-          <Canvas />
+          <Overlay />
         </>
       )}
     </ClientSideSuspense>

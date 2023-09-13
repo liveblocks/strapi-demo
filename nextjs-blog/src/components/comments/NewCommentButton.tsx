@@ -34,20 +34,24 @@ export function NewCommentButton() {
 
   const handleComposerSubmit = useCallback(
     ({ body }: ComposerSubmitComment, event: FormEvent<HTMLFormElement>) => {
+      if (!composerCoords) {
+        return;
+      }
+
       event.preventDefault();
 
       createThread({
         body,
         metadata: {
           resolved: false,
-          x: 25,
-          y: 36,
+          x: composerCoords.x,
+          y: composerCoords.y,
         },
       });
 
       setComposerCoords(null);
     },
-    [createThread]
+    [createThread, composerCoords]
   );
 
   return (

@@ -1,0 +1,19 @@
+.overlayWrapper {
+  position: absolute;
+  display: flex;
+  gap: var(--space-5);
+}
+
+.overlayDragHandle {
+  user-select: none;
+  cursor: move;
+}
+
+.overlayThread {
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  font-size: var(--size-sm);
+}
