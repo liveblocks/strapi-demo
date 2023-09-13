@@ -10,10 +10,9 @@ import { Thread } from "@liveblocks/react-comments";
 import { ThreadData } from "@liveblocks/client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./Overlay.module.css";
-import { CloseIcon } from "@/components/icons/CloseIcon";
 import { Avatar } from "@/components/assorted/Avatar";
-import { DragHandleIcon } from "@/components/icons/DragHandleIcon";
 import { Pointer } from "@/components/assorted/Pointer";
+import { OverlayTop } from "@/components/comments/OverlayTop";
 
 export function Overlay() {
   const threads = useThreads();
@@ -160,21 +159,10 @@ function OverlayThread({ thread }: OverlayThreadProps) {
         </div>
       ) : (
         <div className={styles.overlayThread}>
-          <div
-            className={styles.overlayThreadTop}
+          <OverlayTop
             onPointerDown={handlePointerDown}
-          >
-            <div className={styles.overlayDragHandle}>
-              <DragHandleIcon />
-            </div>
-            <button
-              className={styles.overlayMinimizeButton}
-              onClick={() => setMinimized(true)}
-            >
-              <span className="sr-only">Minimize</span>
-              <CloseIcon />
-            </button>
-          </div>
+            onClose={() => setMinimized(true)}
+          />
           <div className={styles.overlayThreadMain}>
             <Thread thread={thread} />
           </div>
