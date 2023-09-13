@@ -1,7 +1,5 @@
 "use client";
 
-import styles from "./Overlay.module.css";
-
 import {
   ThreadMetadata,
   useEditThreadMetadata,
@@ -10,32 +8,84 @@ import {
 import { Thread } from "@liveblocks/react-comments";
 import { ThreadData } from "@liveblocks/client";
 import { useEffect, useRef, useState } from "react";
+import styles from "./Overlay.module.css";
 
 export function Overlay() {
   const threads = useThreads();
-  const editThreadMetadata = useEditThreadMetadata();
-  const [dragging, setDragging] = useState(false);
-  const dragTarget = useRef<string | null>(null);
 
-  const [threadsCoords, setThreadCoords] = useState(new Map());
+  return (
+    <>
+      {threads
+        .filter((thread) => !thread.metadata.resolved)
+        .map((thread) => (
+          <OverlayThread key={thread.id} thread={thread} />
+        ))}
+    </>
+  );
+}
+
+type OverlayThreadProps = {
+  thread: ThreadData<ThreadMetadata>;
+};
+
+function OverlayThread({ thread }: OverlayThreadProps) {
+  const threadRef = useRef<HTMLDivElement>(null);
+  const dragging = useRef(false);
+  const dragOffset = useRef({ x: 0, y: 0 });
+  const editThreadMetadata = useEditThreadMetadata();
+  const [coords, setCoords] = useState<{ x: number; y: number }>({
+    x: thread.metadata.x,
+    y: thread.metadata.y,
+  });
 
   useEffect(() => {
-    function handlePointerUp() {
-      setDragging(false);
-      dragTarget.current = null;
+    if (dragging.current) {
+      return;
     }
 
-    function handlePointerMove(e: PointerEvent) {
-      if (!dragTarget.current) {
+    setCoords({ x: thread.metadata.x, y: thread.metadata.y });
+  }, [thread]);
+
+  function handlePointerDown(e: React.PointerEvent<HTMLDivElement>) {
+    if (!threadRef.current) {
+      return;
+    }
+
+    const rect = threadRef.current.getBoundingClientRect();
+    dragOffset.current = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    };
+    dragging.current = true;
+  }
+
+  useEffect(() => {
+    function handlePointerUp(e: PointerEvent) {
+      if (!dragging.current) {
         return;
       }
 
+      dragging.current = false;
+
+      const { x, y } = dragOffset.current;
       editThreadMetadata({
-        threadId: dragTarget.current,
+        threadId: thread.id,
         metadata: {
-          x: e.clientX,
-          y: e.clientY,
+          x: e.clientX - x,
+          y: e.clientY - y,
         },
+      });
+    }
+
+    function handlePointerMove(e: PointerEvent) {
+      if (!dragging.current) {
+        return;
+      }
+
+      const { x, y } = dragOffset.current;
+      setCoords({
+        x: e.clientX - x,
+        y: e.clientY - y,
       });
     }
 
@@ -52,41 +102,15 @@ export function Overlay() {
         handlePointerMove
       );
     };
-  }, [editThreadMetadata]);
-
-  return (
-    <>
-      {threads
-        .filter((thread) => !thread.metadata.resolved)
-        .map((thread) => (
-          <OverlayThread
-            key={thread.id}
-            thread={thread}
-            onDrag={(threadId) => (dragTarget.current = threadId)}
-          />
-        ))}
-    </>
-  );
-}
-
-type OverlayThreadProps = {
-  thread: ThreadData<ThreadMetadata>;
-  onDrag: (id: string) => void;
-};
-
-function OverlayThread({ thread, onDrag }: OverlayThreadProps) {
-  const [coords, setCoords] = useState();
-
-  function handlePointerDown() {
-    onDrag(thread.id);
-  }
+  }, [thread.id, editThreadMetadata]);
 
   return (
     <div
+      ref={threadRef}
       className={styles.overlayWrapper}
       style={{
-        top: thread.metadata.y,
-        left: thread.metadata.x,
+        top: coords.y,
+        left: coords.x,
       }}
     >
       <div
