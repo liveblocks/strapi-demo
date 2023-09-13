@@ -1,10 +1,11 @@
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Composer } from "@liveblocks/react-comments";
 import * as Portal from "@radix-ui/react-portal";
 import { useCreateThread } from "@/liveblocks.config";
 import { ComposerSubmitComment } from "@liveblocks/react-comments/primitives";
 import { CommentIcon } from "@/components/icons/CommentIcon";
 import styles from "./NewCommentButton.module.css";
+import { Pointer } from "@/components/assorted/Pointer";
 
 type ComposerCoords = null | { x: number; y: number };
 
@@ -12,6 +13,7 @@ export function NewCommentButton() {
   const [creatingComment, setCreatingComment] = useState(false);
   const [composerCoords, setComposerCoords] = useState<ComposerCoords>(null);
   const createThread = useCreateThread();
+  const composerRef = useRef(null);
 
   useEffect(() => {
     if (!creatingComment) {
@@ -20,7 +22,6 @@ export function NewCommentButton() {
 
     function newComment(e: MouseEvent) {
       e.preventDefault();
-      console.log("CREATE", e);
       setCreatingComment(false);
       setComposerCoords({ x: e.clientX, y: e.clientY });
     }
@@ -63,13 +64,17 @@ export function NewCommentButton() {
         <CommentIcon />
       </button>
       {composerCoords ? (
-        <Portal.Root asChild>
+        <Portal.Root
+          className={styles.composerWrapper}
+          style={{
+            top: composerCoords.y + 12 + "px",
+            left: composerCoords.x + 10 + "px",
+          }}
+        >
+          <Pointer />
           <Composer
+            onBlur={() => setCreatingComment(false)}
             className={styles.composer}
-            style={{
-              top: composerCoords.y + "px",
-              left: composerCoords.x + "px",
-            }}
             onComposerSubmit={handleComposerSubmit}
           />
         </Portal.Root>

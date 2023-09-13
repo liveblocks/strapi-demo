@@ -13,7 +13,7 @@ import styles from "./Overlay.module.css";
 import { CloseIcon } from "@/components/icons/CloseIcon";
 import { Avatar } from "@/components/assorted/Avatar";
 import { DragHandleIcon } from "@/components/icons/DragHandleIcon";
-import { PointerIcon } from "@/components/icons/PointerIcon";
+import { Pointer } from "@/components/assorted/Pointer";
 
 export function Overlay() {
   const threads = useThreads();
@@ -64,12 +64,12 @@ function OverlayThread({ thread }: OverlayThreadProps) {
 
       const rect = threadRef.current.getBoundingClientRect();
       dragOffset.current = {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
+        x: e.pageX - rect.left - window.scrollX,
+        y: e.pageY - rect.top - window.scrollY,
       };
       dragStart.current = {
-        x: e.clientX,
-        y: e.clientY,
+        x: e.pageX,
+        y: e.pageY,
       };
       dragging.current = true;
     },
@@ -78,10 +78,7 @@ function OverlayThread({ thread }: OverlayThreadProps) {
 
   const handleMinimizedPointerUp = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
-      if (
-        e.clientX === dragStart.current.x &&
-        e.clientY === dragStart.current.y
-      ) {
+      if (e.pageX === dragStart.current.x && e.pageY === dragStart.current.y) {
         setMinimized(false);
       }
     },
@@ -100,8 +97,8 @@ function OverlayThread({ thread }: OverlayThreadProps) {
       editThreadMetadata({
         threadId: thread.id,
         metadata: {
-          x: e.clientX - x,
-          y: e.clientY - y,
+          x: e.pageX - x,
+          y: e.pageY - y,
         },
       });
     }
@@ -113,8 +110,8 @@ function OverlayThread({ thread }: OverlayThreadProps) {
 
       const { x, y } = dragOffset.current;
       setCoords({
-        x: e.clientX - x,
-        y: e.clientY - y,
+        x: e.pageX - x,
+        y: e.pageY - y,
       });
     }
 
@@ -146,9 +143,7 @@ function OverlayThread({ thread }: OverlayThreadProps) {
         left: coords.x,
       }}
     >
-      <div className={styles.overlayPointer}>
-        <PointerIcon width="14" />
-      </div>
+      <Pointer />
       {minimized ? (
         <div
           onPointerDown={handlePointerDown}
