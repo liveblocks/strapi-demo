@@ -48,8 +48,16 @@
 }
 
 .minimizedThread {
+  display: flex;
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  gap: var(--space-5);
   cursor: pointer;
-  box-shadow: var(--shadow-lg);
-  border-radius: 99999px;
+  background: var(--color-surface-elevated);
+  border-radius: var(--radius);
   border: 1px solid var(--color-border);
+  box-shadow: var(--shadow);
+  font-size: var(--size-sm);
+  font-weight: 500;
+  user-select: none;
 }

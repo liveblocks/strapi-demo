@@ -159,8 +159,9 @@ function OverlayThread({ thread }: OverlayThreadProps) {
             src={user.avatar}
             name={user.name}
             tooltip={false}
-            size={32}
+            size={24}
           />
+          <div>{user.name}</div>
         </div>
       ) : (
         <div className={styles.overlayThread}>
