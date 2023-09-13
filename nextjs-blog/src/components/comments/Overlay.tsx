@@ -4,11 +4,13 @@ import {
   ThreadMetadata,
   useEditThreadMetadata,
   useThreads,
+  useUser,
 } from "@/liveblocks.config";
 import { Thread } from "@liveblocks/react-comments";
 import { ThreadData } from "@liveblocks/client";
 import { useEffect, useRef, useState } from "react";
 import styles from "./Overlay.module.css";
+import { CloseIcon } from "@/components/icons/CloseIcon";
 
 export function Overlay() {
   const threads = useThreads();
@@ -29,10 +31,14 @@ type OverlayThreadProps = {
 };
 
 function OverlayThread({ thread }: OverlayThreadProps) {
+  const { user, isLoading } = useUser(thread.comments[0].userId);
+
+  const editThreadMetadata = useEditThreadMetadata();
+  const [minimized, setMinimized] = useState(true);
+
   const threadRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
   const dragOffset = useRef({ x: 0, y: 0 });
-  const editThreadMetadata = useEditThreadMetadata();
   const [coords, setCoords] = useState<{ x: number; y: number }>({
     x: thread.metadata.x,
     y: thread.metadata.y,
@@ -104,6 +110,10 @@ function OverlayThread({ thread }: OverlayThreadProps) {
     };
   }, [thread.id, editThreadMetadata]);
 
+  if (!user || isLoading) {
+    return null;
+  }
+
   return (
     <div
       ref={threadRef}
@@ -113,13 +123,34 @@ function OverlayThread({ thread }: OverlayThreadProps) {
         left: coords.x,
       }}
     >
-      <div
-        className={styles.overlayDragHandle}
-        onPointerDown={handlePointerDown}
-      >
-        drag
-      </div>
-      <Thread className={styles.overlayThread} thread={thread} />
+      {minimized ? (
+        <div
+          onPointerDown={handlePointerDown}
+          className={styles.overlayDragHandle}
+        >
+          <img
+            src={user.avatar}
+            style={{ userSelect: "none" }}
+            draggable={false}
+          />
+          <button onClick={() => setMinimized(false)}>open</button>
+        </div>
+      ) : (
+        <div className={styles.overlayThread}>
+          <div>
+            <div
+              className={styles.overlayDragHandle}
+              onPointerDown={handlePointerDown}
+            >
+              drag
+            </div>
+            <button onClick={() => setMinimized(true)}>
+              <CloseIcon />
+            </button>
+          </div>
+          <Thread thread={thread} />
+        </div>
+      )}
     </div>
   );
 }
