@@ -5,6 +5,6 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     ctx.body = strapi
       .plugin('liveblocks-comments-plugin')
       .service('myService')
-      .getWelcomeMessage();
+      .getRooms();
   },
 });
