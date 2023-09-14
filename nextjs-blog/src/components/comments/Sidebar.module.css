@@ -5,6 +5,7 @@
   bottom: var(--space-10);
   width: 400px;
   max-width: 90%;
+  z-index: var(--z-comments-sidemenu);
 }
 
 .sidebar {
