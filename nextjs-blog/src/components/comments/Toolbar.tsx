@@ -6,6 +6,7 @@ import * as Collapsible from "@radix-ui/react-collapsible";
 import styles from "./Toolbar.module.css";
 import { NewThread } from "@/components/comments/NewThread";
 import { SidebarIcon } from "@/components/icons/SidebarIcon";
+import { AvatarStack } from "@/components/assorted/AvatarStack";
 
 export function Toolbar() {
   const [open, setOpen] = useState(true);
@@ -14,6 +15,7 @@ export function Toolbar() {
     <Collapsible.Root open={open} onOpenChange={setOpen}>
       <div className={styles.toolbar}>
         <NewThread />
+        <AvatarStack />
         <Collapsible.Trigger asChild>
           <button style={{ opacity: open ? "0.6" : "1" }}>
             <SidebarIcon />
