@@ -38,8 +38,8 @@ export function NewThread() {
       e.preventDefault();
       setCreatingCommentState("placed");
       setComposerCoords({
-        x: e.clientX,
-        y: e.clientY,
+        x: e.clientX + window.scrollX,
+        y: e.clientY + window.scrollY,
       });
     }
 

@@ -6,17 +6,18 @@ import * as Collapsible from "@radix-ui/react-collapsible";
 import styles from "./Toolbar.module.css";
 import { NewThread } from "@/components/comments/NewThread";
 import { SidebarIcon } from "@/components/icons/SidebarIcon";
-import { CloseIcon } from "@/components/icons/CloseIcon";
 
 export function Toolbar() {
   const [open, setOpen] = useState(true);
 
   return (
     <Collapsible.Root open={open} onOpenChange={setOpen}>
-      <div className={styles.toolbar} data-reverse-theme="true">
+      <div className={styles.toolbar}>
         <NewThread />
         <Collapsible.Trigger asChild>
-          <button>{open ? <CloseIcon /> : <SidebarIcon />}</button>
+          <button style={{ opacity: open ? "0.6" : "1" }}>
+            <SidebarIcon />
+          </button>
         </Collapsible.Trigger>
       </div>
       <Collapsible.Content>
