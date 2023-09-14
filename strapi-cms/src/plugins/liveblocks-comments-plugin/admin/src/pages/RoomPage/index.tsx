@@ -18,7 +18,6 @@ const RoomPage = (a) => {
   useEffect(() => {
     async function run() {
       const fetchedThreads = await getThreadsInRoom(roomId)
-      console.log(3, fetchedThreads[0])
       setThreads(fetchedThreads)
     }
 

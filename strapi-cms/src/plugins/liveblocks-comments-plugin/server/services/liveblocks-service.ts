@@ -1,5 +1,6 @@
 import { Strapi } from '@strapi/strapi';
 import fetch from "node-fetch";
+import { type ThreadData } from "@liveblocks/client";
 
 const headers =  {
   "Authorization": `Bearer ${process.env.LIVEBLOCKS_SECRET_KEY}`
@@ -17,11 +18,8 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     return await response.json();
   },
-  async getRoomThreads(ctx) {
-    const url = new URL("https://example.com" + ctx.request.url)
-    const roomId = url.searchParams.get("roomId")
-
-    const response = await fetch(`https://api.liveblocks.io/v2/rooms/${roomId}/threads`, {
+  async getRoomThreads(roomId: string): Promise<ThreadData[]> {
+    const response = await fetch(`https://api.liveblocks.io/v2/rooms/${encodeURIComponent(roomId)}/threads`, {
       headers
     })
 

@@ -3,9 +3,9 @@
 
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "."
+    "rootDir": ".",
+    "downlevelIteration": false
   },
-
   "include": [
     // Include the root directory
     "server",

@@ -13,6 +13,10 @@ export type Room = {
   metadata: Record<string, string | string[]>;
 }
 
+export type RoomWithThreads = Room & {
+  threads: ThreadData[]
+}
+
 const { get } = getFetchClient()
 
 export async function getRooms(): Promise<Room[]> {
@@ -29,6 +33,17 @@ export async function getThreadsInRoom(roomId: string): Promise<ThreadData[]> {
   try {
     const response = await get(`/${pluginId}/getLiveblocksRoomThreads?roomId=${roomId}`)
     return response.data.data;
+  } catch(err) {
+    console.log(err)
+    return []
+  }
+}
+
+export async function getRoomsWithThreads(): Promise<RoomWithThreads[]> {
+  try {
+    const response = await get(`/${pluginId}/getLiveblocksRoomsWithThreads`)
+    console.log(response.data[0].threads.filter((thread) => thread.metadata.resolved).length)
+    return response.data;
   } catch(err) {
     console.log(err)
     return []

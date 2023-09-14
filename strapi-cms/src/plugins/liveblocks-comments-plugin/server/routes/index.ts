@@ -9,6 +9,14 @@ export default [
   },
   {
     method: 'GET',
+    path: '/getLiveblocksRoomsWithThreads',
+    handler: 'liveblocksController.getLiveblocksRoomsWithThreads',
+    config: {
+      policies: [],
+    },
+  },
+  {
+    method: 'GET',
     path: '/getLiveblocksRoomThreads',
     handler: 'liveblocksController.getLiveblocksRoomThreads',
     config: {
