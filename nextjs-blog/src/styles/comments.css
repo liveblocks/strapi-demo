@@ -1,3 +1,13 @@
 :root {
   --lb-accent: black;
 }
+
+.lb-thread,
+.lb-composer {
+  border-radius: var(--radius);
+}
+
+.lb-composer {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
