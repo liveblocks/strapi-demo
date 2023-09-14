@@ -15,46 +15,26 @@ export function NewThread() {
   const [creatingCommentState, setCreatingCommentState] = useState<
     "placing" | "placed" | "complete"
   >("complete");
-  const [composerCoords, setComposerCoords] = useState<ComposerCoords>(null);
   const createThread = useCreateThread();
+
   const composerRef = useRef<HTMLDivElement>(null);
+  const [composerCoords, setComposerCoords] = useState<ComposerCoords>(null);
 
   const dragging = useRef(false);
   const dragOffset = useRef({ x: 0, y: 0 });
   const dragStart = useRef({ x: 0, y: 0 });
-
-  const handlePointerDownOverlay = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      console.log("down");
-      if (!composerRef.current) {
-        return;
-      }
-
-      const rect = composerRef.current.getBoundingClientRect();
-      dragOffset.current = {
-        x: e.pageX - rect.left - window.scrollX,
-        y: e.pageY - rect.top - window.scrollY,
-      };
-      dragStart.current = {
-        x: e.pageX,
-        y: e.pageY,
-      };
-      dragging.current = true;
-    },
-    []
-  );
 
   useEffect(() => {
     if (creatingCommentState === "complete") {
       return;
     }
 
+    // Place a composer on the screen
     function newComment(e: MouseEvent) {
       if (dragging.current) {
         return;
       }
 
-      console.log("new");
       e.preventDefault();
       setCreatingCommentState("placed");
       setComposerCoords({
@@ -71,8 +51,8 @@ export function NewThread() {
   }, [creatingCommentState]);
 
   useEffect(() => {
+    // If dragging composer, update position
     function handlePointerMove(e: PointerEvent) {
-      console.log("move");
       if (!dragging.current) {
         return;
       }
@@ -84,16 +64,15 @@ export function NewThread() {
       });
     }
 
+    // Stop dragging, timeout to avoid `newComment` running
     function handlePointerUp() {
       if (!dragging.current) {
         return;
       }
-      console.log("up");
 
       setTimeout(() => {
         dragging.current = false;
       });
-      //setCreatingComment(false);
     }
 
     document.documentElement.addEventListener("pointermove", handlePointerMove);
@@ -112,6 +91,34 @@ export function NewThread() {
     };
   }, []);
 
+  // Enabling dragging with the top bar
+  const handlePointerDownOverlay = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (!composerRef.current) {
+        return;
+      }
+
+      const rect = composerRef.current.getBoundingClientRect();
+      dragOffset.current = {
+        x: e.pageX - rect.left - window.scrollX,
+        y: e.pageY - rect.top - window.scrollY,
+      };
+      dragStart.current = {
+        x: e.pageX,
+        y: e.pageY,
+      };
+      dragging.current = true;
+    },
+    []
+  );
+
+  // Close on pressing X
+  const handleOverlayClose = useCallback(() => {
+    setCreatingCommentState("complete");
+    setComposerCoords(null);
+  }, []);
+
+  // On composer submit, create thread and reset state
   const handleComposerSubmit = useCallback(
     ({ body }: ComposerSubmitComment, event: FormEvent<HTMLFormElement>) => {
       if (!composerCoords) {
@@ -134,11 +141,6 @@ export function NewThread() {
     },
     [createThread, composerCoords]
   );
-
-  const handleOverlayClose = useCallback(() => {
-    setCreatingCommentState("complete");
-    setComposerCoords(null);
-  }, []);
 
   return (
     <>
