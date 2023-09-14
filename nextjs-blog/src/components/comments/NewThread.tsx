@@ -5,24 +5,27 @@ import { useCreateThread } from "@/liveblocks.config";
 import { ComposerSubmitComment } from "@liveblocks/react-comments/primitives";
 import { CommentIcon } from "@/components/icons/CommentIcon";
 import styles from "./NewThread.module.css";
-import { Pointer } from "@/components/assorted/Pointer";
+import { Pointer, POINTER_OFFSET } from "@/components/assorted/Pointer";
 import { OverlayTop } from "@/components/comments/OverlayTop";
+import { NewThreadCursor } from "@/components/comments/NewThreadCursor";
 
 type ComposerCoords = null | { x: number; y: number };
 
 export function NewThread() {
-  const [creatingComment, setCreatingComment] = useState(false);
+  const [creatingCommentState, setCreatingCommentState] = useState<
+    "placing" | "placed" | "complete"
+  >("complete");
   const [composerCoords, setComposerCoords] = useState<ComposerCoords>(null);
   const createThread = useCreateThread();
   const composerRef = useRef<HTMLDivElement>(null);
 
-  const [minimized, setMinimized] = useState(true);
   const dragging = useRef(false);
   const dragOffset = useRef({ x: 0, y: 0 });
   const dragStart = useRef({ x: 0, y: 0 });
 
-  const handlePointerDown = useCallback(
+  const handlePointerDownOverlay = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
+      console.log("down");
       if (!composerRef.current) {
         return;
       }
@@ -42,14 +45,22 @@ export function NewThread() {
   );
 
   useEffect(() => {
-    if (!creatingComment) {
+    if (creatingCommentState === "complete") {
       return;
     }
 
     function newComment(e: MouseEvent) {
+      if (dragging.current) {
+        return;
+      }
+
+      console.log("new");
       e.preventDefault();
-      setCreatingComment(false);
-      setComposerCoords({ x: e.clientX, y: e.clientY });
+      setCreatingCommentState("placed");
+      setComposerCoords({
+        x: e.clientX,
+        y: e.clientY,
+      });
     }
 
     document.documentElement.addEventListener("click", newComment);
@@ -57,10 +68,11 @@ export function NewThread() {
     return () => {
       document.documentElement.removeEventListener("click", newComment);
     };
-  }, [creatingComment]);
+  }, [creatingCommentState]);
 
   useEffect(() => {
     function handlePointerMove(e: PointerEvent) {
+      console.log("move");
       if (!dragging.current) {
         return;
       }
@@ -74,12 +86,14 @@ export function NewThread() {
 
     function handlePointerUp() {
       if (!dragging.current) {
-        setCreatingComment(false);
         return;
       }
+      console.log("up");
 
-      dragging.current = false;
-      setCreatingComment(false);
+      setTimeout(() => {
+        dragging.current = false;
+      });
+      //setCreatingComment(false);
     }
 
     document.documentElement.addEventListener("pointermove", handlePointerMove);
@@ -90,6 +104,7 @@ export function NewThread() {
         "pointermove",
         handlePointerMove
       );
+
       document.documentElement.removeEventListener(
         "pointerup",
         handlePointerUp
@@ -109,43 +124,55 @@ export function NewThread() {
         body,
         metadata: {
           resolved: false,
-          x: composerCoords.x,
-          y: composerCoords.y,
+          x: composerCoords.x + POINTER_OFFSET.x,
+          y: composerCoords.y + POINTER_OFFSET.y,
         },
       });
 
       setComposerCoords(null);
+      setCreatingCommentState("complete");
     },
     [createThread, composerCoords]
   );
 
+  const handleOverlayClose = useCallback(() => {
+    setCreatingCommentState("complete");
+    setComposerCoords(null);
+  }, []);
+
   return (
     <>
       <button
-        onClick={() => setCreatingComment(!creatingComment)}
-        style={{ opacity: creatingComment ? 0.7 : 1 }}
+        onClick={() =>
+          setCreatingCommentState(
+            creatingCommentState !== "complete" ? "complete" : "placing"
+          )
+        }
+        style={{ opacity: creatingCommentState !== "complete" ? 0.7 : 1 }}
       >
         <CommentIcon />
       </button>
-      {composerCoords ? (
+      {composerCoords && creatingCommentState === "placed" ? (
         <Portal.Root
           className={styles.composerWrapper}
           style={{
-            top: composerCoords.y + 12 + "px",
-            left: composerCoords.x + 10 + "px",
+            transform: `translate(${composerCoords.x + POINTER_OFFSET.x}px, ${
+              composerCoords.y + POINTER_OFFSET.y
+            }px)`,
           }}
           asChild
         >
           <div ref={composerRef} className={styles.composer}>
-            <Pointer />
             <OverlayTop
-              onPointerDown={handlePointerDown}
-              onClose={() => setCreatingComment(false)}
+              onPointerDown={handlePointerDownOverlay}
+              onClose={handleOverlayClose}
             />
+            <Pointer />
             <Composer onComposerSubmit={handleComposerSubmit} />
           </div>
         </Portal.Root>
       ) : null}
+      {creatingCommentState === "placing" ? <NewThreadCursor /> : null}
     </>
   );
 }

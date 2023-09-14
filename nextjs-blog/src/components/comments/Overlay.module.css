@@ -1,5 +1,7 @@
 .overlayWrapper {
   position: absolute;
+  top: 0;
+  left: 0;
   display: flex;
   gap: var(--space-5);
 }

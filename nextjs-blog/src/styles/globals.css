@@ -1,5 +1,6 @@
 @import "./normalize.css";
 @import "@liveblocks/react-comments/styles.css";
+@import "./comments.css";
 
 :root {
   --color-black: 0 0 0;

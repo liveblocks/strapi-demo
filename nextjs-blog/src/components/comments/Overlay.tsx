@@ -138,8 +138,7 @@ function OverlayThread({ thread }: OverlayThreadProps) {
       ref={threadRef}
       className={styles.overlayWrapper}
       style={{
-        top: coords.y,
-        left: coords.x,
+        transform: `translate(${coords.x}px, ${coords.y}px)`,
       }}
     >
       <Pointer />
