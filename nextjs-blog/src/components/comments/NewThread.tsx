@@ -174,7 +174,7 @@ export function NewThread() {
           </div>
         </Portal.Root>
       ) : null}
-      {creatingCommentState === "placing" ? <NewThreadCursor /> : null}
+      <NewThreadCursor display={creatingCommentState === "placing"} />
     </>
   );
 }

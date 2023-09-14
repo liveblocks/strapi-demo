@@ -146,6 +146,10 @@ body,
   min-height: 100vh;
 }
 
+html.hide-cursor {
+  cursor: none;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

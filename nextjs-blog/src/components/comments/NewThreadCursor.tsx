@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import * as Portal from "@radix-ui/react-portal";
-import styles from "./NewThreadCursor.module.css";
 import { Pointer, POINTER_OFFSET } from "@/components/assorted/Pointer";
+import styles from "./NewThreadCursor.module.css";
+import stylesOverlay from "./Overlay.module.css";
+import { PlusCircleIcon } from "@/components/icons/PlusCircleIcon";
 
-export function NewThreadCursor() {
+export function NewThreadCursor({ display }: { display: boolean }) {
   const [coords, setCoords] = useState({
     x: -500,
     y: -500,
@@ -26,6 +28,18 @@ export function NewThreadCursor() {
     };
   }, []);
 
+  useEffect(() => {
+    if (display) {
+      document.documentElement.classList.add("hide-cursor");
+    } else {
+      document.documentElement.classList.remove("hide-cursor");
+    }
+  }, [display]);
+
+  if (!display) {
+    return null;
+  }
+
   return (
     <Portal.Root>
       <div
@@ -37,7 +51,10 @@ export function NewThreadCursor() {
         }}
       >
         <Pointer />
-        New comment
+        <div className={stylesOverlay.minimizedThread}>
+          <PlusCircleIcon opacity="0.7" />
+          <div>New thread</div>
+        </div>
       </div>
     </Portal.Root>
   );
