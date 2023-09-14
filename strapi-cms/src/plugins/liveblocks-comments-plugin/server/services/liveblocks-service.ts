@@ -17,15 +17,16 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     return await response.json();
   },
-  async getRoomComments(ctx) {
-    const { roomId } = ctx.params;
+  async getRoomThreads(ctx) {
+    const url = new URL("https://example.com" + ctx.request.url)
+    const roomId = url.searchParams.get("roomId")
 
     const response = await fetch(`https://api.liveblocks.io/v2/rooms/${roomId}/threads`, {
       headers
     })
 
     if (!response.ok) {
-      throw new Error("Can't retrieve Liveblocks rooms")
+      throw new Error(`Can't retrieve Liveblocks threads for room ${roomId}`)
     }
 
     return await response.json();

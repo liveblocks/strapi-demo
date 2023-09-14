@@ -10,12 +10,14 @@ import { Switch, Route } from 'react-router-dom';
 import { AnErrorOccurred } from '@strapi/helper-plugin';
 import pluginId from '../../pluginId';
 import HomePage from '../HomePage';
+import RoomPage from "../RoomPage";
 
 const App = () => {
   return (
     <div>
       <Switch>
         <Route path={`/plugins/${pluginId}`} component={HomePage} exact />
+        <Route path={`/plugins/${pluginId}/room/*`} component={RoomPage} exact />
         <Route component={AnErrorOccurred} />
       </Switch>
     </div>

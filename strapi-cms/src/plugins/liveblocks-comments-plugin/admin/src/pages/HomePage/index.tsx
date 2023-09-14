@@ -29,7 +29,7 @@ const HomePage = () => {
         <Stack gap={3}  paddingLeft={10} paddingRight={10}>
           {rooms.map((room) => (
             <Box key={room.id} background={"white"} padding={4}>
-              <Link href={`admin/plugins/${pluginId}/room/${encodeURIComponent(room.id)}`}>
+              <Link to={`${pluginId}/room/${encodeURIComponent(room.id)}`}>
                 Room ID: {room.id}
               </Link>
             </Box>

@@ -5,12 +5,12 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     ctx.body = await strapi
       .plugin('liveblocks-comments-plugin')
       .service('liveblocksService')
-      .getRooms();
+      .getRooms(ctx);
   },
-  async getLiveblocksRoomComments(ctx) {
+  async getLiveblocksRoomThreads(ctx) {
     ctx.body = await strapi
       .plugin('liveblocks-comments-plugin')
       .service('liveblocksService')
-      .getRoomComments();
+      .getRoomThreads(ctx);
   }
 });

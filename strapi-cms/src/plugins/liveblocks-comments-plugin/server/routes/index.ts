@@ -9,8 +9,8 @@ export default [
   },
   {
     method: 'GET',
-    path: '/getLiveblocksRoomComments',
-    handler: 'liveblocksController.getLiveblocksRoomComments',
+    path: '/getLiveblocksRoomThreads',
+    handler: 'liveblocksController.getLiveblocksRoomThreads',
     config: {
       policies: [],
     },
