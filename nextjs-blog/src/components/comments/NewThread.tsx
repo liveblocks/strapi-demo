@@ -36,6 +36,14 @@ export function NewThread() {
       }
 
       e.preventDefault();
+
+      // If already placed, click outside to close composer
+      if (creatingCommentState === "placed") {
+        setCreatingCommentState("complete");
+        return;
+      }
+
+      // First click sets composer down
       setCreatingCommentState("placed");
       setComposerCoords({
         x: e.clientX + window.scrollX,
@@ -59,8 +67,8 @@ export function NewThread() {
 
       const { x, y } = dragOffset.current;
       setComposerCoords({
-        x: e.pageX - x,
-        y: e.pageY - y,
+        x: e.pageX - x - POINTER_OFFSET.x,
+        y: e.pageY - y - POINTER_OFFSET.y,
       });
     }
 
@@ -133,6 +141,7 @@ export function NewThread() {
           resolved: false,
           x: composerCoords.x + POINTER_OFFSET.x,
           y: composerCoords.y + POINTER_OFFSET.y,
+          zIndex: 0,
         },
       });
 

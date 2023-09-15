@@ -8,7 +8,7 @@ export function AvatarStack() {
   return (
     <div style={{ display: "flex", gap: "var(--space-3)" }}>
       {currentUser && (
-        <div className="relative ml-8 first:ml-0">
+        <div>
           <Avatar
             src={currentUser.info.avatar}
             name={currentUser.info.name}
@@ -26,7 +26,9 @@ export function AvatarStack() {
             name={info.name}
             size={42}
             borderSize={4}
-            style={{ marginLeft: "calc(1px - var(--space-8)" }}
+            style={{
+              marginLeft: "calc(1px - var(--space-8)",
+            }}
           />
         );
       })}
