@@ -77,7 +77,8 @@
   --z-above: 100;
   --z-overlay: 200;
   --z-badge: 1000;
-  --z-comments-sidemenu: 10000000;
+  --z-comments-sidemenu: 1000000;
+  --z-above-comments-sidemenu: 10000000;
   --opacity-hover: 0.8;
   --opacity-disabled: 0.5;
 

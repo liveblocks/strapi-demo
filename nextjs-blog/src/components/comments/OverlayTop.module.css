@@ -8,6 +8,8 @@
   cursor: move;
   background: var(--color-surface-elevated);
   user-select: none;
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
 }
 
 .overlayDragHandle {
