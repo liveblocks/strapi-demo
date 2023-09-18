@@ -7,8 +7,17 @@ import {
   useOthersConnectionIds,
   useUpdateMyPresence,
 } from "@/liveblocks.config";
+import { ClientSideSuspense } from "@liveblocks/react";
 
 export function Cursors() {
+  return (
+    <ClientSideSuspense fallback={null}>
+      {() => <CursorsComponent />}
+    </ClientSideSuspense>
+  );
+}
+
+function CursorsComponent() {
   /**
    * useMyPresence returns the presence of the current user and a function to update it.
    * updateMyPresence is different than the setState function returned by the useState hook from React.
