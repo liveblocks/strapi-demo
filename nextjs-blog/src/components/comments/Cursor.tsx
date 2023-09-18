@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { memo } from "react";
 import { useOther } from "@/liveblocks.config";
 import { getCoordsFromAccurateCursorPositions } from "@/lib/coords";
 
@@ -8,15 +8,15 @@ type Props = {
   connectionId: number;
 };
 
-export default function Cursor({ connectionId }: Props) {
+function CursorComponent({ connectionId }: Props) {
+  // Get this user's cursor positions from presence
   const otherPresence = useOther(connectionId, (other) => other.presence);
-
   if (!otherPresence?.cursor) {
     return null;
   }
 
+  // Convert CSS selectors and x/y percentage into x/y px on page
   const position = getCoordsFromAccurateCursorPositions(otherPresence.cursor);
-
   if (!position) {
     return;
   }
@@ -43,3 +43,5 @@ export default function Cursor({ connectionId }: Props) {
     </svg>
   );
 }
+
+export const Cursor = memo(CursorComponent);

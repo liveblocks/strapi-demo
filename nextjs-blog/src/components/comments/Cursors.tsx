@@ -1,10 +1,9 @@
 "use client";
 
-import Cursor from "./Cursor";
+import { Cursor } from "./Cursor";
 import { useEffect } from "react";
 import { getCoordsFromPointerEvent } from "@/lib/coords";
 import {
-  useOthers,
   useOthersConnectionIds,
   useUpdateMyPresence,
 } from "@/liveblocks.config";
@@ -22,15 +21,16 @@ export function Cursors() {
    * Return all the other users in the room and their presence (a cursor position in this case)
    */
   const othersConnectionIds = useOthersConnectionIds();
-  const others = useOthers();
 
   useEffect(() => {
+    // On cursor move, update presence
     function handlePointerMove(e: PointerEvent) {
       e.preventDefault();
       const cursor = getCoordsFromPointerEvent(e);
       updateMyPresence({ cursor });
     }
 
+    // Hide cursor on leave page
     function handlePointerLeave() {
       updateMyPresence({ cursor: null });
     }
@@ -53,20 +53,12 @@ export function Cursors() {
     };
   }, [updateMyPresence]);
 
+  // Iterate through currently connected users and pass unique `connectionId` to `Cursor`
   return (
     <>
-      {
-        /**
-         * Iterate over other users and display a cursor based on their presence
-         */
-        others.map(({ connectionId, presence }) => {
-          if (presence.cursor === null) {
-            return null;
-          }
-
-          return <Cursor key={connectionId} connectionId={connectionId} />;
-        })
-      }
+      {othersConnectionIds.map((connectionId) => (
+        <Cursor key={connectionId} connectionId={connectionId} />
+      ))}
     </>
   );
 }
