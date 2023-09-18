@@ -1,5 +1,5 @@
-import { Room } from "@/components/assorted/Room";
-import { PageArticle } from "@/components/assorted/PageArticle";
+import { PageArticle } from "@/components/site/PageArticle";
+import { Room } from "@/components/comments/Room";
 import { Comments } from "@/components/comments/Comments";
 
 export default async function Article({

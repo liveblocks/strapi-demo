@@ -1,5 +1,5 @@
 import { useOthers, useSelf } from "@/liveblocks.config";
-import { Avatar } from "@/components/assorted/Avatar";
+import { Avatar } from "./Avatar";
 
 export function AvatarStack() {
   const users = useOthers();

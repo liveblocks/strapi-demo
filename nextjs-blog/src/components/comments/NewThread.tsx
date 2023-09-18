@@ -5,7 +5,7 @@ import { useCreateThread } from "@/liveblocks.config";
 import { ComposerSubmitComment } from "@liveblocks/react-comments/primitives";
 import { CommentIcon } from "@/components/icons/CommentIcon";
 import styles from "./NewThread.module.css";
-import { Pointer, POINTER_OFFSET } from "@/components/assorted/Pointer";
+import { Pointer, POINTER_OFFSET } from "./Pointer";
 import { OverlayTop } from "@/components/comments/OverlayTop";
 import { NewThreadCursor } from "@/components/comments/NewThreadCursor";
 

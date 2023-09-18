@@ -10,8 +10,8 @@ import { Thread } from "@liveblocks/react-comments";
 import { ThreadData } from "@liveblocks/client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./Overlay.module.css";
-import { Avatar } from "@/components/assorted/Avatar";
-import { Pointer } from "@/components/assorted/Pointer";
+import { Avatar } from "./Avatar";
+import { Pointer } from "./Pointer";
 import { OverlayTop } from "@/components/comments/OverlayTop";
 
 export function Overlay() {

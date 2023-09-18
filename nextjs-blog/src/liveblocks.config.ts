@@ -99,7 +99,16 @@ export const {
       return user.info;
     },
     async resolveMentionSuggestions({ text }) {
-      return [];
+      const response = await fetch(
+        `/api/users/search?text=${encodeURIComponent(text)}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Problem resolving user");
+      }
+
+      const userIds = await response.json();
+      return userIds;
     },
   }
 );

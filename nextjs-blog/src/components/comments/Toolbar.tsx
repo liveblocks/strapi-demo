@@ -6,7 +6,7 @@ import * as Collapsible from "@radix-ui/react-collapsible";
 import styles from "./Toolbar.module.css";
 import { NewThread } from "@/components/comments/NewThread";
 import { SidebarIcon } from "@/components/icons/SidebarIcon";
-import { AvatarStack } from "@/components/assorted/AvatarStack";
+import { AvatarStack } from "./AvatarStack";
 
 export function Toolbar() {
   const [open, setOpen] = useState(true);

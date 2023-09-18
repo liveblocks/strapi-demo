@@ -1,5 +1,5 @@
-import { PageHome } from "@/components/assorted/PageHome";
-import { Room } from "@/components/assorted/Room";
+import { PageHome } from "@/components/site/PageHome";
+import { Room } from "@/components/comments/Room";
 import { Comments } from "@/components/comments/Comments";
 
 export default async function Home() {

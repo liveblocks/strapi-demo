@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import * as Portal from "@radix-ui/react-portal";
-import { Pointer, POINTER_OFFSET } from "@/components/assorted/Pointer";
+import { Pointer, POINTER_OFFSET } from "./Pointer";
 import styles from "./NewThreadCursor.module.css";
 import stylesOverlay from "./Overlay.module.css";
 import { PlusCircleIcon } from "@/components/icons/PlusCircleIcon";
