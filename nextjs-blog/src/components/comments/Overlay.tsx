@@ -16,6 +16,7 @@ import { OverlayTop } from "@/components/comments/OverlayTop";
 
 export function Overlay() {
   const threads = useThreads();
+  const [beingDragged, setBeingDragged] = useState(false);
 
   const maxZIndex = useMemo(() => {
     let max = 0;
@@ -28,7 +29,7 @@ export function Overlay() {
   }, [threads]);
 
   return (
-    <>
+    <div style={{ pointerEvents: beingDragged ? "none" : "initial" }}>
       {threads
         .filter((thread) => !thread.metadata.resolved)
         .map((thread) => (
@@ -36,18 +37,24 @@ export function Overlay() {
             key={thread.id}
             thread={thread}
             maxZIndex={maxZIndex}
+            onDragChange={setBeingDragged}
           />
         ))}
-    </>
+    </div>
   );
 }
 
 type OverlayThreadProps = {
   thread: ThreadData<ThreadMetadata>;
   maxZIndex: number;
+  onDragChange: (dragging: boolean) => void;
 };
 
-function OverlayThread({ thread, maxZIndex }: OverlayThreadProps) {
+function OverlayThread({
+  thread,
+  maxZIndex,
+  onDragChange,
+}: OverlayThreadProps) {
   const { user, isLoading } = useUser(thread.comments[0].userId);
 
   const editThreadMetadata = useEditThreadMetadata();
@@ -87,7 +94,7 @@ function OverlayThread({ thread, maxZIndex }: OverlayThreadProps) {
       };
       dragging.current = true;
     },
-    []
+    [onDragChange]
   );
 
   const handleMinimizedPointerUp = useCallback(
@@ -114,6 +121,7 @@ function OverlayThread({ thread, maxZIndex }: OverlayThreadProps) {
         return;
       }
 
+      onDragChange(false);
       dragging.current = false;
 
       const { x, y } = dragOffset.current;
@@ -131,6 +139,8 @@ function OverlayThread({ thread, maxZIndex }: OverlayThreadProps) {
       if (!dragging.current) {
         return;
       }
+
+      onDragChange(true);
 
       const { x, y } = dragOffset.current;
       setCoords({
@@ -152,7 +162,7 @@ function OverlayThread({ thread, maxZIndex }: OverlayThreadProps) {
         handlePointerMove
       );
     };
-  }, [thread.id, editThreadMetadata, maxZIndex]);
+  }, [thread.id, editThreadMetadata, maxZIndex, onDragChange]);
 
   if (!user || isLoading) {
     return null;

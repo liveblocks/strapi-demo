@@ -6,12 +6,24 @@ const client = createClient({
   // throttle: 100,
 });
 
+export type AccurateCursorPositions = {
+  cursorSelectors: string[];
+  cursorX: number;
+  cursorY: number;
+};
+
+export type DragOffset = {
+  x: number;
+  y: number;
+};
+
 // Presence represents the properties that exist on every user in the Room
 // and that will automatically be kept in sync. Accessible through the
 // `user.presence` property. Must be JSON-serializable.
 type Presence = {
   // cursor: { x: number, y: number } | null,
   // ...
+  cursor: AccurateCursorPositions | null;
 };
 
 // Optionally, Storage represents the shared document that persists in the
@@ -48,6 +60,9 @@ export type ThreadMetadata = {
   y: number;
   resolved: boolean;
   zIndex: number;
+  cursorSelectors: AccurateCursorPositions["cursorSelectors"];
+  cursorX: AccurateCursorPositions["cursorX"];
+  cursorY: AccurateCursorPositions["cursorY"];
 };
 
 export const {
