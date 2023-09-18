@@ -7,8 +7,8 @@ import { PlusCircleIcon } from "@/components/icons/PlusCircleIcon";
 
 export function NewThreadCursor({ display }: { display: boolean }) {
   const [coords, setCoords] = useState({
-    x: -500,
-    y: -500,
+    x: -10000,
+    y: -10000,
   });
 
   useEffect(() => {

@@ -11,15 +11,15 @@ export function getCoordsFromPointerEvent<El>(
   const target = e.target as HTMLElement;
 
   // === GET SELECTORS FOR CURRENT ELEMENT =======================================
-  const pathArray: HTMLElement[] = e.composedPath
-    ? e.composedPath()
-    : (e as any).path;
+  const pathArray: HTMLElement[] =
+    (e as any)._savedComposedPath || e.composedPath() || (e as any).path;
 
   let nthChildFromLowestIdSelectors: string[] = [];
   let nthChildSelectors: string[] = [];
   let classNameSelectors: string[] = [];
 
   let reachedBody = false;
+  let idFound = false;
   pathArray.forEach((el) => {
     if (reachedBody) {
       return;
@@ -38,6 +38,7 @@ export function getCoordsFromPointerEvent<El>(
 
     // Selector same as above, but stops at nearest id
     if (el?.id) {
+      idFound = true;
       nthChildFromLowestIdSelectors = [`#${el.id}`];
     }
     nthChildFromLowestIdSelectors.push(currentNthChild);
@@ -49,6 +50,11 @@ export function getCoordsFromPointerEvent<El>(
       .join(".");
     classNameSelectors.push(el.nodeName + (classes ? "." + classes : ""));
   });
+
+  // If no id found, selector not needed
+  if (!idFound) {
+    nthChildFromLowestIdSelectors = [];
+  }
 
   // Create CSS selectors
   const classNamePath = classNameSelectors.reverse().join(">") || "";
@@ -73,7 +79,7 @@ export function getCoordsFromPointerEvent<El>(
       nthChildPathFromLowestId,
       nthChildPath,
       classNamePath,
-    ],
+    ].filter((selector) => selector),
     cursorX: xPercent,
     cursorY: yPercent,
   };

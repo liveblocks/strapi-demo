@@ -8,6 +8,7 @@ import styles from "./NewThread.module.css";
 import { Pointer, POINTER_OFFSET } from "./Pointer";
 import { OverlayTop } from "@/components/comments/OverlayTop";
 import { NewThreadCursor } from "@/components/comments/NewThreadCursor";
+import { getCoordsFromPointerEvent } from "@/lib/coords";
 
 type ComposerCoords = null | { x: number; y: number };
 
@@ -24,6 +25,11 @@ export function NewThread() {
   const dragOffset = useRef({ x: 0, y: 0 });
   const dragStart = useRef({ x: 0, y: 0 });
 
+  const lastPointerEvent = useRef<PointerEvent>();
+  const [allowUseComposer, setAllowUseComposer] = useState(false);
+  const allowComposerRef = useRef(allowUseComposer);
+  allowComposerRef.current = allowUseComposer;
+
   useEffect(() => {
     if (creatingCommentState === "complete") {
       return;
@@ -34,6 +40,7 @@ export function NewThread() {
       if (dragging.current) {
         return;
       }
+      console.log("new");
 
       e.preventDefault();
 
@@ -64,6 +71,10 @@ export function NewThread() {
       if (!dragging.current) {
         return;
       }
+
+      // Prevents issue with composedPath getting removed
+      (e as any)._savedComposedPath = e.composedPath();
+      lastPointerEvent.current = e;
 
       const { x, y } = dragOffset.current;
       setComposerCoords({
@@ -99,6 +110,33 @@ export function NewThread() {
     };
   }, []);
 
+  // Set pointer event from last click on body for use later
+  useEffect(() => {
+    if (creatingCommentState !== "placing") {
+      return;
+    }
+
+    function handlePointerDown(e: PointerEvent) {
+      if (allowComposerRef.current) {
+        return;
+      }
+
+      // Prevents issue with composedPath getting removed
+      (e as any)._savedComposedPath = e.composedPath();
+      lastPointerEvent.current = e;
+      setAllowUseComposer(true);
+    }
+
+    document.documentElement.addEventListener("pointerdown", handlePointerDown);
+
+    return () => {
+      document.documentElement.removeEventListener(
+        "pointerdown",
+        handlePointerDown
+      );
+    };
+  }, [creatingCommentState]);
+
   // Enabling dragging with the top bar
   const handlePointerDownOverlay = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
@@ -124,32 +162,46 @@ export function NewThread() {
   const handleOverlayClose = useCallback(() => {
     setCreatingCommentState("complete");
     setComposerCoords(null);
+    setAllowUseComposer(false);
   }, []);
 
   // On composer submit, create thread and reset state
   const handleComposerSubmit = useCallback(
     ({ body }: ComposerSubmitComment, event: FormEvent<HTMLFormElement>) => {
-      if (!composerCoords) {
+      event.preventDefault();
+
+      if (!composerCoords || !lastPointerEvent.current) {
         return;
       }
 
-      event.preventDefault();
+      const {
+        cursorSelectors = [],
+        cursorX = -10000,
+        cursorY = -10000,
+      } = getCoordsFromPointerEvent(lastPointerEvent.current, {
+        x: 0 - POINTER_OFFSET.x,
+        y: 0 - POINTER_OFFSET.y,
+      }) || {};
 
       createThread({
         body,
         metadata: {
+          cursorSelectors: cursorSelectors.join(","),
+          cursorX,
+          cursorY,
           resolved: false,
-          x: composerCoords.x + POINTER_OFFSET.x,
-          y: composerCoords.y + POINTER_OFFSET.y,
           zIndex: 0,
         },
       });
 
       setComposerCoords(null);
       setCreatingCommentState("complete");
+      setAllowUseComposer(false);
     },
     [createThread, composerCoords]
   );
+
+  console.log(allowUseComposer);
 
   return (
     <>
@@ -167,13 +219,18 @@ export function NewThread() {
         <Portal.Root
           className={styles.composerWrapper}
           style={{
+            pointerEvents: allowUseComposer ? "initial" : "none",
             transform: `translate(${composerCoords.x + POINTER_OFFSET.x}px, ${
               composerCoords.y + POINTER_OFFSET.y
             }px)`,
           }}
           asChild
         >
-          <div ref={composerRef} className={styles.composer}>
+          <div
+            ref={composerRef}
+            className={styles.composer}
+            // style={{ pointerEvents: dragging.current ? "none" : "initial" }}
+          >
             <OverlayTop
               onPointerDown={handlePointerDownOverlay}
               onClose={handleOverlayClose}

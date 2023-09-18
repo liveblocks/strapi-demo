@@ -13,6 +13,10 @@ import styles from "./Overlay.module.css";
 import { Avatar } from "./Avatar";
 import { Pointer } from "./Pointer";
 import { OverlayTop } from "@/components/comments/OverlayTop";
+import {
+  getCoordsFromAccurateCursorPositions,
+  getCoordsFromPointerEvent,
+} from "@/lib/coords";
 
 export function Overlay() {
   const threads = useThreads();
@@ -65,8 +69,8 @@ function OverlayThread({
   const dragOffset = useRef({ x: 0, y: 0 });
   const dragStart = useRef({ x: 0, y: 0 });
   const [coords, setCoords] = useState<{ x: number; y: number }>({
-    x: thread.metadata.x,
-    y: thread.metadata.y,
+    x: -10000,
+    y: -10000,
   });
 
   useEffect(() => {
@@ -74,7 +78,22 @@ function OverlayThread({
       return;
     }
 
-    setCoords({ x: thread.metadata.x, y: thread.metadata.y });
+    const { cursorSelectors, cursorX, cursorY } = thread.metadata;
+
+    if (!cursorSelectors) {
+      return;
+    }
+
+    const fromAccurateCoords = getCoordsFromAccurateCursorPositions({
+      cursorSelectors: cursorSelectors.split(","),
+      cursorX,
+      cursorY,
+    });
+    if (!fromAccurateCoords) {
+      return;
+    }
+    setCoords({ x: fromAccurateCoords?.x, y: fromAccurateCoords.y });
+    // setCoords({ x: thread.metadata.x, y: thread.metadata.y });
   }, [thread]);
 
   const handlePointerDown = useCallback(
@@ -94,7 +113,7 @@ function OverlayThread({
       };
       dragging.current = true;
     },
-    [onDragChange]
+    []
   );
 
   const handleMinimizedPointerUp = useCallback(
@@ -124,14 +143,23 @@ function OverlayThread({
       onDragChange(false);
       dragging.current = false;
 
-      const { x, y } = dragOffset.current;
+      const accurateCoords = getCoordsFromPointerEvent(e, dragOffset.current);
+      if (!accurateCoords) {
+        return;
+      }
+
+      const { cursorSelectors, cursorX, cursorY } = accurateCoords;
+
+      const metadata = {
+        cursorSelectors: cursorSelectors.join(","),
+        cursorX,
+        cursorY,
+        zIndex: maxZIndex + 1,
+      };
+
       editThreadMetadata({
         threadId: thread.id,
-        metadata: {
-          x: e.pageX - x,
-          y: e.pageY - y,
-          zIndex: maxZIndex + 1,
-        },
+        metadata,
       });
     }
 
@@ -206,15 +234,4 @@ function OverlayThread({
       )}
     </div>
   );
-}
-
-function getZIndex(thread: ThreadData<ThreadMetadata>, dragging: boolean) {
-  if (dragging) {
-    console.log("y");
-    return 999999999999;
-  }
-
-  const date = new Date(thread?.updatedAt || thread.createdAt);
-  console.log(date.getTime() / 10000000000);
-  return date.getTime() / 10000000;
 }

@@ -56,8 +56,6 @@ type RoomEvent = {
 
 // Metadata attached to comments
 export type ThreadMetadata = {
-  x: number;
-  y: number;
   resolved: boolean;
   zIndex: number;
 
