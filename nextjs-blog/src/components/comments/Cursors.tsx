@@ -3,7 +3,11 @@
 import Cursor from "./Cursor";
 import { useEffect } from "react";
 import { getCoordsFromPointerEvent } from "@/lib/coords";
-import { useMyPresence, useOthers } from "@/liveblocks.config";
+import {
+  useOthers,
+  useOthersConnectionIds,
+  useUpdateMyPresence,
+} from "@/liveblocks.config";
 
 export function Cursors() {
   /**
@@ -12,11 +16,12 @@ export function Cursors() {
    * You don't need to pass the full presence object to update it.
    * See https://liveblocks.io/docs/api-reference/liveblocks-react#useMyPresence for more information
    */
-  const [{ cursor }, updateMyPresence] = useMyPresence();
+  const updateMyPresence = useUpdateMyPresence();
 
   /**
    * Return all the other users in the room and their presence (a cursor position in this case)
    */
+  const othersConnectionIds = useOthersConnectionIds();
   const others = useOthers();
 
   useEffect(() => {
@@ -59,13 +64,7 @@ export function Cursors() {
             return null;
           }
 
-          return (
-            <Cursor
-              key={`cursor-${connectionId}`}
-              // connectionId is an integer that is incremented on every new connection
-              cursor={presence.cursor}
-            />
-          );
+          return <Cursor key={connectionId} connectionId={connectionId} />;
         })
       }
     </>

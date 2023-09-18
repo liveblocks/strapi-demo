@@ -60,7 +60,9 @@ export type ThreadMetadata = {
   y: number;
   resolved: boolean;
   zIndex: number;
-  cursorSelectors: AccurateCursorPositions["cursorSelectors"];
+
+  // AccurateCursorPositions["cursorSelectors"].toString()
+  cursorSelectors: string;
   cursorX: AccurateCursorPositions["cursorX"];
   cursorY: AccurateCursorPositions["cursorY"];
 };

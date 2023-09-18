@@ -1,15 +1,21 @@
 "use client";
 
 import React from "react";
-import { AccurateCursorPositions } from "@/liveblocks.config";
+import { useOther } from "@/liveblocks.config";
 import { getCoordsFromAccurateCursorPositions } from "@/lib/coords";
 
 type Props = {
-  cursor: AccurateCursorPositions;
+  connectionId: number;
 };
 
-export default function Cursor({ cursor }: Props) {
-  const position = getCoordsFromAccurateCursorPositions(cursor);
+export default function Cursor({ connectionId }: Props) {
+  const otherPresence = useOther(connectionId, (other) => other.presence);
+
+  if (!otherPresence?.cursor) {
+    return null;
+  }
+
+  const position = getCoordsFromAccurateCursorPositions(otherPresence.cursor);
 
   if (!position) {
     return;
