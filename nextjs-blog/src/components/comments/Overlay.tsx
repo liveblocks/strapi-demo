@@ -15,7 +15,8 @@ import { Pointer } from "./Pointer";
 import { OverlayTop } from "@/components/comments/OverlayTop";
 import {
   getCoordsFromAccurateCursorPositions,
-  getCoordsFromPointerEvent,
+  getCoordsFromElement,
+  getElementBeneath,
 } from "@/lib/coords";
 
 export function Overlay() {
@@ -33,7 +34,7 @@ export function Overlay() {
   }, [threads]);
 
   return (
-    <div style={{ pointerEvents: beingDragged ? "none" : "initial" }}>
+    <div>
       {threads
         .filter((thread) => !thread.metadata.resolved)
         .map((thread) => (
@@ -65,16 +66,21 @@ function OverlayThread({
   const [minimized, setMinimized] = useState(true);
 
   const threadRef = useRef<HTMLDivElement>(null);
-  const dragging = useRef(false);
+
+  const [dragging, setDragging] = useState(false);
+  const draggingRef = useRef(false);
+
   const dragOffset = useRef({ x: 0, y: 0 });
   const dragStart = useRef({ x: 0, y: 0 });
+
   const [coords, setCoords] = useState<{ x: number; y: number }>({
     x: -10000,
     y: -10000,
   });
 
+  // Update thread when another user edits
   useEffect(() => {
-    if (dragging.current) {
+    if (draggingRef.current) {
       return;
     }
 
@@ -92,8 +98,9 @@ function OverlayThread({
     if (!fromAccurateCoords) {
       return;
     }
+
+    console.log("update");
     setCoords({ x: fromAccurateCoords?.x, y: fromAccurateCoords.y });
-    // setCoords({ x: thread.metadata.x, y: thread.metadata.y });
   }, [thread]);
 
   const handlePointerDown = useCallback(
@@ -101,6 +108,9 @@ function OverlayThread({
       if (!threadRef.current) {
         return;
       }
+
+      e.currentTarget.setPointerCapture(e.pointerId);
+      // e.stopPropagation();
 
       const rect = threadRef.current.getBoundingClientRect();
       dragOffset.current = {
@@ -111,9 +121,78 @@ function OverlayThread({
         x: e.pageX,
         y: e.pageY,
       };
-      dragging.current = true;
+      draggingRef.current = true;
+
+      console.log("down");
     },
     []
+  );
+
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (!draggingRef.current) {
+        return;
+      }
+
+      const { x, y } = dragOffset.current;
+      setCoords({
+        x: e.pageX - x,
+        y: e.pageY - y,
+      });
+    },
+    []
+  );
+
+  const handlePointerUp = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (!draggingRef.current || !threadRef.current) {
+        return;
+      }
+
+      try {
+        const elementUnder = getElementBeneath(
+          threadRef.current,
+          e.clientX - dragOffset.current.x,
+          e.clientY - dragOffset.current.y
+        );
+
+        if (!elementUnder?.element) {
+          throw new Error("Element under");
+        }
+
+        const accurateCoords = getCoordsFromElement(
+          elementUnder.element as HTMLElement,
+          e.clientX,
+          e.clientY,
+          dragOffset.current
+        );
+        if (!accurateCoords) {
+          throw new Error("Accurate coords");
+        }
+
+        const { cursorSelectors, cursorX, cursorY } = accurateCoords;
+
+        console.log(cursorSelectors);
+
+        const metadata = {
+          cursorSelectors: cursorSelectors.join(","),
+          cursorX,
+          cursorY,
+          zIndex: maxZIndex + 1,
+        };
+
+        editThreadMetadata({
+          threadId: thread.id,
+          metadata,
+        });
+      } catch (err) {
+        console.log(err);
+      } finally {
+        draggingRef.current = false;
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      }
+    },
+    [editThreadMetadata, maxZIndex, thread]
   );
 
   const handleMinimizedPointerUp = useCallback(
@@ -134,64 +213,6 @@ function OverlayThread({
     });
   }, [thread.id, editThreadMetadata, maxZIndex]);
 
-  useEffect(() => {
-    function handlePointerUp(e: PointerEvent) {
-      if (!dragging.current) {
-        return;
-      }
-
-      onDragChange(false);
-      dragging.current = false;
-
-      const accurateCoords = getCoordsFromPointerEvent(e, dragOffset.current);
-      if (!accurateCoords) {
-        return;
-      }
-
-      const { cursorSelectors, cursorX, cursorY } = accurateCoords;
-
-      const metadata = {
-        cursorSelectors: cursorSelectors.join(","),
-        cursorX,
-        cursorY,
-        zIndex: maxZIndex + 1,
-      };
-
-      editThreadMetadata({
-        threadId: thread.id,
-        metadata,
-      });
-    }
-
-    function handlePointerMove(e: PointerEvent) {
-      if (!dragging.current) {
-        return;
-      }
-
-      onDragChange(true);
-
-      const { x, y } = dragOffset.current;
-      setCoords({
-        x: e.pageX - x,
-        y: e.pageY - y,
-      });
-    }
-
-    document.documentElement.addEventListener("pointerup", handlePointerUp);
-    document.documentElement.addEventListener("pointermove", handlePointerMove);
-
-    return () => {
-      document.documentElement.removeEventListener(
-        "pointerup",
-        handlePointerUp
-      );
-      document.documentElement.removeEventListener(
-        "pointermove",
-        handlePointerMove
-      );
-    };
-  }, [thread.id, editThreadMetadata, maxZIndex, onDragChange]);
-
   if (!user || isLoading) {
     return null;
   }
@@ -202,16 +223,21 @@ function OverlayThread({
       className={styles.overlayWrapper}
       style={{
         transform: `translate(${coords.x}px, ${coords.y}px)`,
-        zIndex: dragging.current ? 9999999 : thread.metadata.zIndex,
+        zIndex: draggingRef.current ? 9999999 : thread.metadata.zIndex,
       }}
       onClick={handleIncreaseZIndex}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
     >
       <Pointer />
       {minimized ? (
         <div
-          onPointerDown={handlePointerDown}
-          onPointerUp={handleMinimizedPointerUp}
+          // onPointerUp={handleMinimizedPointerUp}
           className={styles.minimizedThread}
+          onClick={() => {
+            setMinimized(false);
+          }}
         >
           <Avatar
             src={user.avatar}

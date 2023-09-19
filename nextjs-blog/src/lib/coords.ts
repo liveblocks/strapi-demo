@@ -31,17 +31,19 @@ export function getCoordsFromPointerEvent<El>(
 
     // Selector with nth child and HTML element types
     // More performant than: [...el.parentNode.children].indexOf(el) + 1
-    const nthIndex =
-      Array.prototype.indexOf.call(el.parentNode!.children, el) + 1;
-    const currentNthChild = `${el.nodeName}:nth-child(${nthIndex})`;
-    nthChildSelectors.push(currentNthChild);
+    if (el?.parentNode?.children) {
+      const nthIndex =
+        Array.prototype.indexOf.call(el.parentNode.children, el) + 1;
+      const currentNthChild = `${el.nodeName}:nth-child(${nthIndex})`;
+      nthChildSelectors.push(currentNthChild);
+      nthChildFromLowestIdSelectors.push(currentNthChild);
+    }
 
     // Selector same as above, but stops at nearest id
     if (el?.id) {
       idFound = true;
       nthChildFromLowestIdSelectors = [`#${el.id}`];
     }
-    nthChildFromLowestIdSelectors.push(currentNthChild);
 
     // Selector with just class names
     // More performant than: [...el.classList].map(CSS.escape).join('.')
@@ -85,6 +87,101 @@ export function getCoordsFromPointerEvent<El>(
   };
 }
 
+export function getCoordsFromElement<El>(
+  target: HTMLElement,
+  clientX: number,
+  clientY: number,
+  dragOffset: DragOffset = { x: 0, y: 0 }
+): AccurateCursorPositions | null {
+  if (!(target instanceof HTMLElement)) {
+    //console.log("x", target);
+    //return null;
+  }
+
+  // === GET SELECTORS FOR CURRENT ELEMENT =======================================
+  const pathArray: Element[] = composedPathForElement(target);
+
+  let nthChildFromLowestIdSelectors: string[] = [];
+  let nthChildSelectors: string[] = [];
+  let classNameSelectors: string[] = [];
+
+  let reachedBody = false;
+  let idFound = false;
+  pathArray.forEach((el) => {
+    if (reachedBody) {
+      return;
+    }
+
+    if (el.nodeName?.toLowerCase() === "body") {
+      reachedBody = true;
+    }
+
+    // Selector with nth child and HTML element types
+    // More performant than: [...el.parentNode.children].indexOf(el) + 1
+    if (el?.parentNode?.children) {
+      const nthIndex =
+        Array.prototype.indexOf.call(el.parentNode.children, el) + 1;
+      const currentNthChild = `${el.nodeName}:nth-child(${nthIndex})`;
+      nthChildSelectors.push(currentNthChild);
+    }
+
+    // Selector same as above, but stops at nearest id
+    if (el?.id && el?.parentNode?.children) {
+      idFound = true;
+      nthChildFromLowestIdSelectors = [`#${el.id}`];
+      const nthIndex =
+        Array.prototype.indexOf.call(el.parentNode.children, el) + 1;
+      const currentNthChild = `${el.nodeName}:nth-child(${nthIndex})`;
+      nthChildFromLowestIdSelectors.push(currentNthChild);
+    }
+
+    // Selector with just class names
+    // More performant than: [...el.classList].map(CSS.escape).join('.')
+    if (el.classList) {
+      const classes = Array.prototype.map
+        .call(el.classList, CSS.escape)
+        .join(".");
+      classNameSelectors.push(el.nodeName + (classes ? "." + classes : ""));
+    } else {
+      classNameSelectors.push(el.nodeName);
+    }
+  });
+
+  // If no id found, selector not needed
+  if (!idFound) {
+    nthChildFromLowestIdSelectors = [];
+  }
+
+  // Create CSS selectors
+  const classNamePath = classNameSelectors.reverse().join(">") || "";
+  const nthChildPath = nthChildSelectors.reverse().join(">") || "";
+  const nthChildPathFromLowestId =
+    nthChildFromLowestIdSelectors.reverse().join(">") || "";
+
+  // If last element has id or data-strapi-editable
+  const lastElement = pathArray[pathArray.length - 1];
+  const id = lastElement?.id || "";
+  const strapiData = lastElement?.dataset?.["strapi-editable"] || "";
+
+  // Get percentage across current element
+  console.log(target);
+  const rect = target.getBoundingClientRect();
+  const xPercent = (clientX - rect.left - dragOffset.x) / rect.width;
+  const yPercent = (clientY - rect.top - dragOffset.y) / rect.height;
+
+  return {
+    cursorSelectors: [
+      strapiData,
+      id,
+      nthChildPathFromLowestId,
+      nthChildPath,
+      classNamePath,
+    ].filter((selector) => selector),
+    cursorX: xPercent,
+    cursorY: yPercent,
+  };
+}
+
 export function getCoordsFromAccurateCursorPositions({
   cursorSelectors,
   cursorX,
@@ -113,4 +210,30 @@ export function getCoordsFromAccurateCursorPositions({
   }
 
   return null;
+}
+
+export function getElementBeneath(
+  el: HTMLElement,
+  x: number,
+  y: number
+): { element: Element | null; clientX: number; clientY: number } {
+  const prevPointerEvents = el.style.pointerEvents;
+  el.style.pointerEvents = "none";
+  const beneathElement = document.elementFromPoint(x, y);
+  el.style.pointerEvents = prevPointerEvents;
+  return { element: beneathElement, clientX: x, clientY: y };
+}
+
+export function composedPathForElement(
+  element: Element | EventTarget
+): Array<Element> {
+  const path: Array<Element> = [];
+
+  let currentElement: Element | null = element as Element;
+  while (currentElement) {
+    path.push(currentElement);
+    currentElement = currentElement.parentElement;
+  }
+
+  return path;
 }
