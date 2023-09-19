@@ -117,8 +117,9 @@ function OverlayThread({
         y: e.pageY,
       };
       draggingRef.current = true;
+      onDragChange(true);
     },
-    []
+    [onDragChange]
   );
 
   // Update locally on drag with easy coords
@@ -147,6 +148,7 @@ function OverlayThread({
       // If no cursor movement and clicked, toggle minimized
       if (e.pageX === dragStart.current.x && e.pageY === dragStart.current.y) {
         draggingRef.current = false;
+        onDragChange(false);
         e.currentTarget.releasePointerCapture(e.pointerId);
         setMinimized(false);
         return;
@@ -190,10 +192,11 @@ function OverlayThread({
         console.log(err);
       } finally {
         draggingRef.current = false;
+        onDragChange(false);
         e.currentTarget.releasePointerCapture(e.pointerId);
       }
     },
-    [editThreadMetadata, maxZIndex, thread]
+    [editThreadMetadata, maxZIndex, thread, onDragChange]
   );
 
   //  Increase z-index on last element updated
