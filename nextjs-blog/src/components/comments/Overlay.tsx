@@ -110,7 +110,6 @@ function OverlayThread({
       }
 
       e.currentTarget.setPointerCapture(e.pointerId);
-      // e.stopPropagation();
 
       const rect = threadRef.current.getBoundingClientRect();
       dragOffset.current = {
@@ -146,6 +145,14 @@ function OverlayThread({
   const handlePointerUp = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
       if (!draggingRef.current || !threadRef.current) {
+        return;
+      }
+
+      // If no cursor movement and a quick click, toggle minimized
+      if (e.pageX === dragStart.current.x && e.pageY === dragStart.current.y) {
+        draggingRef.current = false;
+        e.currentTarget.releasePointerCapture(e.pointerId);
+        setMinimized(false);
         return;
       }
 
@@ -226,18 +233,15 @@ function OverlayThread({
         zIndex: draggingRef.current ? 9999999 : thread.metadata.zIndex,
       }}
       onClick={handleIncreaseZIndex}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
     >
       <Pointer />
       {minimized ? (
         <div
           // onPointerUp={handleMinimizedPointerUp}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
           className={styles.minimizedThread}
-          onClick={() => {
-            setMinimized(false);
-          }}
         >
           <Avatar
             src={user.avatar}
@@ -250,7 +254,7 @@ function OverlayThread({
       ) : (
         <div className={styles.overlayThread}>
           <OverlayTop
-            onPointerDown={handlePointerDown}
+            // onPointerDown={handlePointerDown}
             onClose={() => setMinimized(true)}
           />
           <div className={styles.overlayThreadMain}>
