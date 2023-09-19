@@ -1,6 +1,7 @@
 import { ArticleList } from "./ArticleList";
 import styles from "./PageHome.module.css";
 import { getMarketingText } from "@/lib/strapi";
+import { EditableText } from "@/components/editable/EditableText";
 
 export async function PageHome() {
   const marketingText = await getMarketingText();
@@ -9,10 +10,16 @@ export async function PageHome() {
     <main className={styles.home}>
       <div className={styles.homeHeader}>
         <h1 className={styles.homeTitle}>
-          {marketingText.attributes.BlogTitle}
+          <EditableText
+            strapiApiId={"marketing-text"}
+            attribute={"BlogTitle"}
+          />
         </h1>
         <div className={styles.homeDescription}>
-          {marketingText.attributes.BlogDescription}
+          <EditableText
+            strapiApiId={"marketing-text"}
+            attribute={"BlogDescription"}
+          />
         </div>
       </div>
       <ArticleList />

@@ -1,7 +1,7 @@
 import { PageHome } from "@/components/site/PageHome";
 import { Room } from "@/components/comments/Room";
-import { Cursors } from "@/components/comments/Cursors";
 import { Comments } from "@/components/comments/Comments";
+import { Cursors } from "@/components/comments/Cursors";
 
 export default async function Home() {
   return (
