@@ -60,19 +60,14 @@ function OverlayThread({
   maxZIndex,
   onDragChange,
 }: OverlayThreadProps) {
-  const { user, isLoading } = useUser(thread.comments[0].userId);
-
   const editThreadMetadata = useEditThreadMetadata();
+  const { user, isLoading } = useUser(thread.comments[0].userId);
   const [minimized, setMinimized] = useState(true);
 
   const threadRef = useRef<HTMLDivElement>(null);
-
-  const [dragging, setDragging] = useState(false);
   const draggingRef = useRef(false);
-
   const dragOffset = useRef({ x: 0, y: 0 });
   const dragStart = useRef({ x: 0, y: 0 });
-
   const [coords, setCoords] = useState<{ x: number; y: number }>({
     x: -10000,
     y: -10000,
@@ -95,14 +90,15 @@ function OverlayThread({
       cursorX,
       cursorY,
     });
+
     if (!fromAccurateCoords) {
       return;
     }
 
-    console.log("update");
     setCoords({ x: fromAccurateCoords?.x, y: fromAccurateCoords.y });
   }, [thread]);
 
+  // Start drag on pointer down
   const handlePointerDown = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
       if (!threadRef.current) {
@@ -121,12 +117,11 @@ function OverlayThread({
         y: e.pageY,
       };
       draggingRef.current = true;
-
-      console.log("down");
     },
     []
   );
 
+  // Update locally on drag with easy coords
   const handlePointerMove = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
       if (!draggingRef.current) {
@@ -142,13 +137,14 @@ function OverlayThread({
     []
   );
 
+  // After drag, update for everyone with accurate coords
   const handlePointerUp = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
       if (!draggingRef.current || !threadRef.current) {
         return;
       }
 
-      // If no cursor movement and a quick click, toggle minimized
+      // If no cursor movement and clicked, toggle minimized
       if (e.pageX === dragStart.current.x && e.pageY === dragStart.current.y) {
         draggingRef.current = false;
         e.currentTarget.releasePointerCapture(e.pointerId);
@@ -163,12 +159,12 @@ function OverlayThread({
           e.clientY - dragOffset.current.y
         );
 
-        if (!elementUnder?.element) {
+        if (!elementUnder) {
           throw new Error("Element under");
         }
 
         const accurateCoords = getCoordsFromElement(
-          elementUnder.element as HTMLElement,
+          elementUnder as HTMLElement,
           e.clientX,
           e.clientY,
           dragOffset.current
@@ -178,8 +174,6 @@ function OverlayThread({
         }
 
         const { cursorSelectors, cursorX, cursorY } = accurateCoords;
-
-        console.log(cursorSelectors);
 
         const metadata = {
           cursorSelectors: cursorSelectors.join(","),
@@ -202,15 +196,7 @@ function OverlayThread({
     [editThreadMetadata, maxZIndex, thread]
   );
 
-  const handleMinimizedPointerUp = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      if (e.pageX === dragStart.current.x && e.pageY === dragStart.current.y) {
-        setMinimized(false);
-      }
-    },
-    []
-  );
-
+  //  Increase z-index on last element updated
   const handleIncreaseZIndex = useCallback(() => {
     editThreadMetadata({
       threadId: thread.id,
@@ -237,7 +223,6 @@ function OverlayThread({
       <Pointer />
       {minimized ? (
         <div
-          // onPointerUp={handleMinimizedPointerUp}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
@@ -254,7 +239,7 @@ function OverlayThread({
       ) : (
         <div className={styles.overlayThread}>
           <OverlayTop
-            // onPointerDown={handlePointerDown}
+            //onPointerDown={handlePointerDown}
             onClose={() => setMinimized(true)}
           />
           <div className={styles.overlayThreadMain}>

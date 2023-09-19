@@ -88,14 +88,13 @@ export function getCoordsFromPointerEvent<El>(
 }
 
 export function getCoordsFromElement<El>(
-  target: HTMLElement,
+  target: Element,
   clientX: number,
   clientY: number,
   dragOffset: DragOffset = { x: 0, y: 0 }
 ): AccurateCursorPositions | null {
-  if (!(target instanceof HTMLElement)) {
-    //console.log("x", target);
-    //return null;
+  if (!(target instanceof Element)) {
+    return null;
   }
 
   // === GET SELECTORS FOR CURRENT ELEMENT =======================================
@@ -164,7 +163,6 @@ export function getCoordsFromElement<El>(
   const strapiData = lastElement?.dataset?.["strapi-editable"] || "";
 
   // Get percentage across current element
-  console.log(target);
   const rect = target.getBoundingClientRect();
   const xPercent = (clientX - rect.left - dragOffset.x) / rect.width;
   const yPercent = (clientY - rect.top - dragOffset.y) / rect.height;
@@ -214,14 +212,14 @@ export function getCoordsFromAccurateCursorPositions({
 
 export function getElementBeneath(
   el: HTMLElement,
-  x: number,
-  y: number
-): { element: Element | null; clientX: number; clientY: number } {
+  clientX: number,
+  clientY: number
+): Element | null {
   const prevPointerEvents = el.style.pointerEvents;
   el.style.pointerEvents = "none";
-  const beneathElement = document.elementFromPoint(x, y);
+  const beneathElement = document.elementFromPoint(clientX, clientY);
   el.style.pointerEvents = prevPointerEvents;
-  return { element: beneathElement, clientX: x, clientY: y };
+  return beneathElement;
 }
 
 export function composedPathForElement(

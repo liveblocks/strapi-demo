@@ -2,7 +2,7 @@
 
 import { Cursor } from "./Cursor";
 import { useEffect } from "react";
-import { getCoordsFromPointerEvent } from "@/lib/coords";
+import { getCoordsFromElement } from "@/lib/coords";
 import {
   useOthersConnectionIds,
   useUpdateMyPresence,
@@ -35,8 +35,11 @@ function CursorsComponent() {
     // On cursor move, update presence
     function handlePointerMove(e: PointerEvent) {
       e.preventDefault();
-      const cursor = getCoordsFromPointerEvent(e);
-      updateMyPresence({ cursor });
+      const elementUnder = document.elementFromPoint(e.clientX, e.clientY);
+      if (elementUnder) {
+        const cursor = getCoordsFromElement(elementUnder, e.clientX, e.clientY);
+        updateMyPresence({ cursor });
+      }
     }
 
     // Hide cursor on leave page
