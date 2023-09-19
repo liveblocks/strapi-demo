@@ -34,7 +34,6 @@ function CursorsComponent() {
   useEffect(() => {
     // On cursor move, update presence
     function handlePointerMove(e: PointerEvent) {
-      e.preventDefault();
       const elementUnder = document.elementFromPoint(e.clientX, e.clientY);
       if (elementUnder) {
         const cursor = getCoordsFromElement(elementUnder, e.clientX, e.clientY);
