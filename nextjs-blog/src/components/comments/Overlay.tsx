@@ -6,18 +6,15 @@ import {
   useThreads,
   useUser,
 } from "@/liveblocks.config";
-import { Thread } from "@liveblocks/react-comments";
 import { ThreadData } from "@liveblocks/client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./Overlay.module.css";
-import { Avatar } from "./Avatar";
-import { Pointer } from "./Pointer";
-import { OverlayTop } from "@/components/comments/OverlayTop";
 import {
   getCoordsFromAccurateCursorPositions,
   getCoordsFromElement,
   getElementBeneath,
 } from "@/lib/coords";
+import { PinnedComment } from "@/components/comments/PinnedComment";
 
 export function Overlay() {
   const threads = useThreads();
@@ -34,7 +31,7 @@ export function Overlay() {
   }, [threads]);
 
   return (
-    <div>
+    <div style={{ pointerEvents: beingDragged ? "none" : "auto" }}>
       {threads
         .filter((thread) => !thread.metadata.resolved)
         .map((thread) => (
@@ -62,7 +59,6 @@ function OverlayThread({
 }: OverlayThreadProps) {
   const editThreadMetadata = useEditThreadMetadata();
   const { user, isLoading } = useUser(thread.comments[0].userId);
-  const [minimized, setMinimized] = useState(true);
 
   const threadRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef(false);
@@ -73,29 +69,38 @@ function OverlayThread({
     y: -10000,
   });
 
-  // Update thread when another user edits
+  // Update thread when another user edits, and update coords when page resizes
   useEffect(() => {
     if (draggingRef.current) {
       return;
     }
+    function updateCoords() {
+      const { cursorSelectors, cursorX, cursorY } = thread.metadata;
+      if (!cursorSelectors) {
+        return;
+      }
 
-    const { cursorSelectors, cursorX, cursorY } = thread.metadata;
+      const fromAccurateCoords = getCoordsFromAccurateCursorPositions({
+        cursorSelectors: cursorSelectors.split(","),
+        cursorX,
+        cursorY,
+      });
+      if (!fromAccurateCoords) {
+        return;
+      }
 
-    if (!cursorSelectors) {
-      return;
+      setCoords({ x: fromAccurateCoords?.x, y: fromAccurateCoords.y });
     }
 
-    const fromAccurateCoords = getCoordsFromAccurateCursorPositions({
-      cursorSelectors: cursorSelectors.split(","),
-      cursorX,
-      cursorY,
-    });
+    updateCoords();
 
-    if (!fromAccurateCoords) {
-      return;
-    }
+    window.addEventListener("resize", updateCoords);
+    window.addEventListener("orientationchange", updateCoords);
 
-    setCoords({ x: fromAccurateCoords?.x, y: fromAccurateCoords.y });
+    return () => {
+      window.removeEventListener("resize", updateCoords);
+      window.removeEventListener("orientationchange", updateCoords);
+    };
   }, [thread]);
 
   // Start drag on pointer down
@@ -150,7 +155,6 @@ function OverlayThread({
         draggingRef.current = false;
         onDragChange(false);
         e.currentTarget.releasePointerCapture(e.pointerId);
-        setMinimized(false);
         return;
       }
 
@@ -221,35 +225,15 @@ function OverlayThread({
         transform: `translate(${coords.x}px, ${coords.y}px)`,
         zIndex: draggingRef.current ? 9999999 : thread.metadata.zIndex,
       }}
-      onClick={handleIncreaseZIndex}
     >
-      <Pointer />
-      {minimized ? (
-        <div
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          className={styles.minimizedThread}
-        >
-          <Avatar
-            src={user.avatar}
-            name={user.name}
-            tooltip={false}
-            size={24}
-          />
-          <div>{user.name}</div>
-        </div>
-      ) : (
-        <div className={styles.overlayThread}>
-          <OverlayTop
-            //onPointerDown={handlePointerDown}
-            onClose={() => setMinimized(true)}
-          />
-          <div className={styles.overlayThreadMain}>
-            <Thread thread={thread} onFocus={handleIncreaseZIndex} />
-          </div>
-        </div>
-      )}
+      <PinnedComment
+        user={user}
+        thread={thread}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onThreadFocus={handleIncreaseZIndex}
+      />
     </div>
   );
 }
