@@ -5,6 +5,7 @@
 :root {
   --color-black: 0 0 0;
   --color-white: 255 255 255;
+  --color-strapi: 73 69 255;
   --color-gray-50: 250 250 250;
   --color-gray-100: 244 244 245;
   --color-gray-150: 236 236 238;
@@ -85,42 +86,19 @@
   accent-color: var(--color-accent);
 }
 
-/* Light theme */
 [data-theme="light"],
 [data-theme="dark"] [data-reverse-theme],
-[data-theme="light"] [data-reverse-theme] [data-reverse-theme] {
-  --color-red: 239 67 67;
-  --color-green: 132 204 22;
-  --color-accent: rgb(var(--color-gray-900));
-  --color-surface: rgb(var(--color-gray-100));
-  --color-surface-hover: rgb(var(--color-gray-150));
-  --color-surface-elevated: rgb(var(--color-white));
-  --color-border: rgb(var(--color-gray-150));
-  --color-border-contrasted: rgb(var(--color-gray-250));
-  --color-border-transparent: rgb(var(--color-gray-900) / 10%);
-  --color-skeleton: rgb(var(--color-gray-150));
-  --color-skeleton-shine: rgb(var(--color-gray-50));
-  --color-tooltip: rgb(var(--color-gray-950));
-  --color-tooltip-text: rgb(var(--color-white));
-  --color-tooltip-border: rgb(var(--color-gray-750));
-  --color-text: rgb(var(--color-gray-900));
-  --color-text-light: rgb(var(--color-gray-600));
-  --color-text-lighter: rgb(var(--color-gray-500));
-  --color-text-lightest: rgb(var(--color-gray-400));
-
-  color-scheme: light;
-}
-
-/* Dark theme */
+[data-theme="light"] [data-reverse-theme] [data-reverse-theme],
 [data-theme="dark"],
 [data-theme="light"] [data-reverse-theme],
 [data-theme="dark"] [data-reverse-theme] [data-reverse-theme] {
   --color-red: 248 113 113;
   --color-green: 162 230 53;
-  --color-accent: rgb(var(--color-white));
-  --color-surface: rgb(var(--color-gray-850));
-  --color-surface-hover: rgb(var(--color-gray-800));
-  --color-surface-elevated: rgb(var(--color-gray-950));
+  --color-accent: rgb(var(--color-strapi));
+  --color-surface: black;
+  --color-surface-hover: black;
+  --color-surface-elevated: black;
+  --color-surface-inverse: white;
   --color-border: rgb(var(--color-gray-750));
   --color-border-contrasted: rgb(var(--color-gray-650));
   --color-border-transparent: rgb(var(--color-white) / 10%);
@@ -130,6 +108,7 @@
   --color-text-light: rgb(var(--color-gray-300));
   --color-text-lighter: rgb(var(--color-gray-400));
   --color-text-lightest: rgb(var(--color-gray-500));
+
   color-scheme: dark;
 }
 
@@ -139,6 +118,8 @@ body {
   color: var(--color-text);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 html,
@@ -150,6 +131,21 @@ body,
 
 html.hide-cursor {
   cursor: none;
+}
+
+.button {
+  background-color: #7af167;
+  color: black;
+  border-radius: 9999px;
+  height: 2.5rem;
+  padding: 0 20px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+}
+
+.button-secondary {
+  background-color: white;
 }
 
 .sr-only {
