@@ -14,14 +14,17 @@
   "attributes": {
     "HeroTitle": {
       "type": "string",
-      "required": true
+      "required": true,
+      "default": "Think better with Acme"
     },
     "HeroDescription": {
       "type": "richtext",
-      "required": true
+      "required": true,
+      "default": "Never miss a note, idea or connection."
     },
     "HeroSubtitle": {
-      "type": "string"
+      "type": "string",
+      "default": "New: Our AI integration just landed"
     }
   }
 }

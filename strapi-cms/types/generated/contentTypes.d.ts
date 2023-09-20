@@ -413,9 +413,14 @@ export interface ApiMarketingTextMarketingText extends Schema.SingleType {
     draftAndPublish: true;
   };
   attributes: {
-    HeroTitle: Attribute.String & Attribute.Required;
-    HeroDescription: Attribute.RichText & Attribute.Required;
-    HeroSubtitle: Attribute.String;
+    HeroTitle: Attribute.String &
+      Attribute.Required &
+      Attribute.DefaultTo<'Think better with Acme'>;
+    HeroDescription: Attribute.RichText &
+      Attribute.Required &
+      Attribute.DefaultTo<'Never miss a note, idea or connection.'>;
+    HeroSubtitle: Attribute.String &
+      Attribute.DefaultTo<'New: Our AI integration just landed'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
