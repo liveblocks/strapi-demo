@@ -91,7 +91,7 @@
 [data-theme="light"] [data-reverse-theme] [data-reverse-theme] {
   --color-red: 239 67 67;
   --color-green: 132 204 22;
-  --color-accent: rgb(var(--color-gray-900));
+  --color-accent: #4945ff;
   --color-surface: rgb(var(--color-gray-100));
   --color-surface-hover: rgb(var(--color-gray-150));
   --color-surface-elevated: rgb(var(--color-white));
@@ -117,7 +117,7 @@
 [data-theme="dark"] [data-reverse-theme] [data-reverse-theme] {
   --color-red: 248 113 113;
   --color-green: 162 230 53;
-  --color-accent: rgb(var(--color-white));
+  --color-accent: #4945ff;
   --color-surface: rgb(var(--color-gray-850));
   --color-surface-hover: rgb(var(--color-gray-800));
   --color-surface-elevated: rgb(var(--color-gray-950));
