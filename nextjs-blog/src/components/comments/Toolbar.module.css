@@ -1,4 +1,4 @@
-.Toolbar {
+.toolbar {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
@@ -11,26 +11,14 @@
   align-items: center;
 }
 
-.ToolbarSeparator {
+.toolbarSeparator {
   height: 1rem;
   margin: 0 16px;
   width: 1px;
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-.ToolbarAvatars {
-  display: flex;
-  gap: -4px;
-}
-
-.ToolbarAvatars img {
-  border-radius: 9999px;
-  border: 2px solid white;
-  width: 2rem;
-  height: 2rem;
-}
-
-.ToolbarActions {
+.toolbarActions {
   display: flex;
   gap: 4px;
 }
