@@ -11,7 +11,6 @@ import * as Portal from "@radix-ui/react-portal";
 import { useCreateThread } from "@/liveblocks.config";
 import { ComposerSubmitComment } from "@liveblocks/react-comments/primitives";
 import styles from "./NewThread.module.css";
-import { Pointer, POINTER_OFFSET } from "./Pointer";
 import { OverlayTop } from "@/components/comments/OverlayTop";
 import { NewThreadCursor } from "@/components/comments/NewThreadCursor";
 import { getCoordsFromPointerEvent } from "@/lib/coords";
@@ -88,8 +87,8 @@ export function NewThread({ children }: Props) {
 
       const { x, y } = dragOffset.current;
       setComposerCoords({
-        x: e.pageX - x - POINTER_OFFSET.x,
-        y: e.pageY - y - POINTER_OFFSET.y,
+        x: e.pageX - x,
+        y: e.pageY - y,
       });
     }
 
@@ -189,8 +188,8 @@ export function NewThread({ children }: Props) {
         cursorX = -10000,
         cursorY = -10000,
       } = getCoordsFromPointerEvent(lastPointerEvent.current, {
-        x: 0 - POINTER_OFFSET.x,
-        y: 0 - POINTER_OFFSET.y,
+        x: 0,
+        y: 0,
       }) || {};
 
       createThread({
@@ -228,9 +227,7 @@ export function NewThread({ children }: Props) {
           className={styles.composerWrapper}
           style={{
             pointerEvents: allowUseComposer ? "initial" : "none",
-            transform: `translate(${composerCoords.x + POINTER_OFFSET.x}px, ${
-              composerCoords.y + POINTER_OFFSET.y
-            }px)`,
+            transform: `translate(${composerCoords.x}px, ${composerCoords.y}px)`,
           }}
           asChild
         >
@@ -243,7 +240,6 @@ export function NewThread({ children }: Props) {
               onPointerDown={handlePointerDownOverlay}
               onClose={handleOverlayClose}
             />
-            <Pointer />
             <Composer onComposerSubmit={handleComposerSubmit} />
           </div>
         </Portal.Root>

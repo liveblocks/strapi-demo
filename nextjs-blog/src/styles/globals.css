@@ -149,7 +149,7 @@ body,
 }
 
 html.hide-cursor {
-  cursor: none;
+  cursor: none !important;
 }
 
 .sr-only {
