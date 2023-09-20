@@ -1,4 +1,4 @@
-.pinnedComment {
+.pinnedThread {
   position: absolute;
   display: flex;
   gap: 16px;
@@ -28,7 +28,7 @@
   height: 28px;
 }
 
-.comment {
+.thread {
   box-shadow: var(--shadow);
   background: #fff;
   border-radius: 8px;
@@ -38,7 +38,7 @@
   min-width: 240px;
 }
 
-.comment > textarea {
+.thread > textarea {
   border: none;
   padding: 8px 12px;
   min-height: 36px;
@@ -46,7 +46,7 @@
   border-top-right-radius: 4px;
 }
 
-.comment > footer {
+.thread > footer {
   border-top: 1px solid #eee;
   display: flex;
   justify-content: flex-end;
@@ -55,7 +55,7 @@
   border-bottom-right-radius: 4px;
 }
 
-.comment > footer button {
+.thread > footer button {
   border-radius: 9999px;
   width: 28px;
   height: 28px;

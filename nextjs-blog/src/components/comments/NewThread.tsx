@@ -1,18 +1,29 @@
-import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import {
+  FormEvent,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Composer } from "@liveblocks/react-comments";
 import * as Portal from "@radix-ui/react-portal";
 import { useCreateThread } from "@/liveblocks.config";
 import { ComposerSubmitComment } from "@liveblocks/react-comments/primitives";
-import { CommentIcon } from "@/components/icons/CommentIcon";
 import styles from "./NewThread.module.css";
 import { Pointer, POINTER_OFFSET } from "./Pointer";
 import { OverlayTop } from "@/components/comments/OverlayTop";
 import { NewThreadCursor } from "@/components/comments/NewThreadCursor";
 import { getCoordsFromPointerEvent } from "@/lib/coords";
+import { Slot } from "@radix-ui/react-slot";
 
 type ComposerCoords = null | { x: number; y: number };
 
-export function NewThread() {
+type Props = {
+  children: ReactNode;
+};
+
+export function NewThread({ children }: Props) {
   const [creatingCommentState, setCreatingCommentState] = useState<
     "placing" | "placed" | "complete"
   >("complete");
@@ -40,7 +51,6 @@ export function NewThread() {
       if (dragging.current) {
         return;
       }
-      console.log("new");
 
       e.preventDefault();
 
@@ -201,11 +211,9 @@ export function NewThread() {
     [createThread, composerCoords]
   );
 
-  console.log(allowUseComposer);
-
   return (
     <>
-      <button
+      <Slot
         onClick={() =>
           setCreatingCommentState(
             creatingCommentState !== "complete" ? "complete" : "placing"
@@ -213,8 +221,8 @@ export function NewThread() {
         }
         style={{ opacity: creatingCommentState !== "complete" ? 0.7 : 1 }}
       >
-        <CommentIcon />
-      </button>
+        {children}
+      </Slot>
       {composerCoords && creatingCommentState === "placed" ? (
         <Portal.Root
           className={styles.composerWrapper}

@@ -1,4 +1,4 @@
-import styles from "./PinnedComment.module.css";
+import styles from "./PinnedThread.module.css";
 import {
   PointerEvent,
   PointerEventHandler,
@@ -19,7 +19,7 @@ type Props = {
   onThreadFocus: () => void;
 };
 
-export function PinnedComment({
+export function PinnedThread({
   user,
   thread,
   onPointerDown,
@@ -55,7 +55,7 @@ export function PinnedComment({
   );
 
   return (
-    <div className={styles.pinnedComment} {...props}>
+    <div className={styles.pinnedThread} {...props}>
       <div
         className={styles.avatarPin}
         onPointerDown={handlePointerDown}
@@ -71,7 +71,7 @@ export function PinnedComment({
         />
       </div>
       {!minimized ? (
-        <div className={styles.comment}>
+        <div className={styles.thread}>
           <Thread
             thread={thread}
             onFocus={onThreadFocus}

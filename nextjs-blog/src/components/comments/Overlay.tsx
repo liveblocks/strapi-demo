@@ -14,7 +14,7 @@ import {
   getCoordsFromElement,
   getElementBeneath,
 } from "@/lib/coords";
-import { PinnedComment } from "@/components/comments/PinnedComment";
+import { PinnedThread } from "@/components/comments/PinnedThread";
 
 export function Overlay() {
   const threads = useThreads();
@@ -226,7 +226,7 @@ function OverlayThread({
         zIndex: draggingRef.current ? 9999999 : thread.metadata.zIndex,
       }}
     >
-      <PinnedComment
+      <PinnedThread
         user={user}
         thread={thread}
         onPointerDown={handlePointerDown}
