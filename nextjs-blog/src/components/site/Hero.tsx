@@ -1,3 +1,4 @@
+import { Star } from "@strapi/icons";
 import { EditableText } from "../editable/EditableText";
 import styles from "./Hero.module.css";
 
@@ -6,6 +7,7 @@ export default function Hero() {
     <div className={styles.Hero}>
       <div className={styles.HeroWrapper}>
         <div className={styles.HeroSubtitle}>
+          <Star width={12} height={12} />
           <EditableText
             strapiApiId={"marketing-text"}
             attribute={"HeroSubtitle"}
