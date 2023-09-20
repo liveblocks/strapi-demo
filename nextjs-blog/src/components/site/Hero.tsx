@@ -5,16 +5,22 @@ export default function Hero() {
   return (
     <div className={styles.Hero}>
       <div className={styles.HeroWrapper}>
+        <div className={styles.HeroSubtitle}>
+          <EditableText
+            strapiApiId={"marketing-text"}
+            attribute={"HeroSubtitle"}
+          />
+        </div>
         <h1>
           <EditableText
             strapiApiId={"marketing-text"}
-            attribute={"BlogTitle"}
+            attribute={"HeroTitle"}
           />
         </h1>
         <p className={styles.HeroDescription}>
           <EditableText
             strapiApiId={"marketing-text"}
-            attribute={"BlogDescription"}
+            attribute={"HeroDescription"}
           />
         </p>
         <div className={styles.HeroButtons}>

@@ -68,12 +68,7 @@ export function EditableTextClient({
   });
 
   return (
-    <div
-      className={styles.EditableTextClient}
-      style={{
-        position: "relative",
-      }}
-    >
+    <div className={styles.EditableTextClient}>
       <ContentEditable onChange={onContentChange} html={text} data-editable />
       <button onClick={updateAttribute}>Save</button>
     </div>

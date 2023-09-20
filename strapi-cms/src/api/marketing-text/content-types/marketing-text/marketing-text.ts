@@ -3,24 +3,28 @@
 export interface MarketingText {
   id: number;
   attributes: {
-    createdAt: Date;    updatedAt: Date;    publishedAt?: Date;    BlogTitle: string;
-    BlogDescription: string;
+    createdAt: Date;    updatedAt: Date;    publishedAt?: Date;    HeroTitle: string;
+    HeroDescription: string;
+    HeroSubtitle?: string;
   };
 }
 export interface MarketingText_Plain {
   id: number;
-  createdAt: Date;  updatedAt: Date;  publishedAt?: Date;  BlogTitle: string;
-  BlogDescription: string;
+  createdAt: Date;  updatedAt: Date;  publishedAt?: Date;  HeroTitle: string;
+  HeroDescription: string;
+  HeroSubtitle?: string;
 }
 
 export interface MarketingText_NoRelations {
   id: number;
-  createdAt: Date;  updatedAt: Date;  publishedAt?: Date;  BlogTitle: string;
-  BlogDescription: string;
+  createdAt: Date;  updatedAt: Date;  publishedAt?: Date;  HeroTitle: string;
+  HeroDescription: string;
+  HeroSubtitle?: string;
 }
 
 export interface MarketingText_AdminPanelLifeCycle {
   id: number;
-  createdAt: Date;  updatedAt: Date;  publishedAt?: Date;  BlogTitle: string;
-  BlogDescription: string;
+  createdAt: Date;  updatedAt: Date;  publishedAt?: Date;  HeroTitle: string;
+  HeroDescription: string;
+  HeroSubtitle?: string;
 }

@@ -407,13 +407,15 @@ export interface ApiMarketingTextMarketingText extends Schema.SingleType {
     singularName: 'marketing-text';
     pluralName: 'marketing-texts';
     displayName: 'MarketingText';
+    description: '';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    BlogTitle: Attribute.String & Attribute.Required;
-    BlogDescription: Attribute.RichText & Attribute.Required;
+    HeroTitle: Attribute.String & Attribute.Required;
+    HeroDescription: Attribute.RichText & Attribute.Required;
+    HeroSubtitle: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
