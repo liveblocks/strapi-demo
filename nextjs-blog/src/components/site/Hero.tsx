@@ -27,6 +27,7 @@ export default function Hero() {
           <button className="button">Get Started</button>
           <button className="button button-secondary">Read Docs</button>
         </div>
+        <div className={styles.HeroScreenshot} />
       </div>
     </div>
   );

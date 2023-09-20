@@ -23,9 +23,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 16px;
+  margin-bottom: var(--space-6);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 4px 16px;
+  padding: var(--space-2) var(--space-6);
 }
 
 .HeroSubtitle [data-editable] {
@@ -53,11 +53,21 @@
   opacity: 0.7;
   text-align: center;
   max-width: 600px;
-  margin: 12px auto 0;
+  margin-top: var(--space-4);
 }
 
 .HeroButtons {
-  margin-top: 36px;
+  margin-top: var(--space-10);
   display: flex;
-  gap: 12px;
+  gap: var(--space-6);
+}
+
+.HeroScreenshot {
+  width: 100%;
+  aspect-ratio: 1/1;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  margin-top: var(--space-18);
+  border-radius: 1rem;
 }
