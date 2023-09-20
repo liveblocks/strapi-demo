@@ -3,45 +3,140 @@
  * HomePage
  *
  */
-
-
-import React, {useEffect, useState} from 'react';
-import pluginId from '../../pluginId';
-import { BaseHeaderLayout, Stack, Box, HeaderLayout, Plus, Link, ArrowLeft, Button, Pencil, Text } from '@strapi/design-system';
-import {getRoomsWithThreads, Room, RoomWithThreads} from "../../api";
+import { format, formatDistance } from "date-fns";
+import React, { useEffect, useState } from "react";
+import pluginId from "../../pluginId";
+import {
+  Stack,
+  Box,
+  HeaderLayout,
+  Link,
+  Badge,
+  Typography,
+  Table,
+  Tbody,
+  Thead,
+  Tr,
+  Td,
+  Tooltip,
+  Th,
+  VisuallyHidden,
+} from "@strapi/design-system";
+import { getRoomsWithThreads, Room, RoomWithThreads } from "../../api";
 
 const HomePage = () => {
-  const [rooms, setRooms] = useState<RoomWithThreads[]>([])
+  const [rooms, setRooms] = useState<RoomWithThreads[]>([]);
 
   useEffect(() => {
     async function run() {
-      const fetchedRooms = await getRoomsWithThreads()
-      setRooms(fetchedRooms)
+      const fetchedRooms = await getRoomsWithThreads();
+      setRooms(fetchedRooms);
     }
 
-    run()
-  }, [])
-
+    run();
+  }, []);
 
   // TODO - add preview URL to metadata and link to it
   // TODO - details summary with list of threads
   return (
     <Stack gap={0} paddingBottom={10}>
-      <HeaderLayout title="Liveblocks Comments" subtitle="A list of rooms. Open one to view comments." as="h2" />
+      <HeaderLayout
+        title="Liveblocks Comments"
+        subtitle={`${rooms.length} room${
+          rooms.length > 1 ? "s" : ""
+        } found with comments.`}
+        as="h2"
+      />
       {rooms.length ? (
-
-        <Stack gap={3}  paddingLeft={10} paddingRight={10}>
-          {rooms.map((room) => (
-            <Box key={room.id} background={"white"} padding={4}>
-              <Stack horizontal justifyContent={"space-between"}>
-                <Link to={`${pluginId}/room/${encodeURIComponent(room.id)}`}>
-                  Room ID: {room.id}
-                </Link>{" "}
-                {room.threads ? <div>{room.threads.filter((thread) => thread.metadata.resolved).length} / {room.threads.length} resolved</div> : null}
-              </Stack>
-            </Box>
-          ))}
-        </Stack>
+        <Box paddingLeft={10} paddingRight={10}>
+          <Table>
+            <Thead>
+              <Tr>
+                <Th>
+                  <Typography variant="sigma">Room ID</Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">Resolved</Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">Created</Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">Last connection</Typography>
+                </Th>
+                <Th>
+                  <VisuallyHidden>Actions</VisuallyHidden>
+                </Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {rooms.map((room) => (
+                <Tr key={room.id}>
+                  <Td>
+                    <Link
+                      to={`${pluginId}/room/${encodeURIComponent(room.id)}`}
+                    >
+                      {room.id}
+                    </Link>
+                  </Td>
+                  <Td>
+                    {room.threads ? (
+                      <Badge
+                        style={{
+                          fontVariantNumeric: "tabular-nums",
+                        }}
+                      >
+                        {
+                          room.threads.filter(
+                            (thread) => thread.metadata.resolved
+                          ).length
+                        }
+                        /{room.threads.length}
+                      </Badge>
+                    ) : null}
+                  </Td>
+                  <Td>
+                    <Tooltip
+                      description={format(
+                        new Date(room.createdAt),
+                        "LLL d, h:mm aa"
+                      )}
+                      position="bottom"
+                    >
+                      <button>
+                        {formatDistance(new Date(room.createdAt), new Date(), {
+                          addSuffix: true,
+                          includeSeconds: true,
+                        })}
+                      </button>
+                    </Tooltip>
+                  </Td>
+                  <Td>
+                    <Tooltip
+                      description={format(
+                        new Date(room.lastConnectionAt),
+                        "LLL d, h:mm aa"
+                      )}
+                      position="bottom"
+                    >
+                      <button>
+                        {formatDistance(
+                          new Date(room.lastConnectionAt),
+                          new Date(),
+                          {
+                            addSuffix: true,
+                            includeSeconds: true,
+                          }
+                        )}
+                      </button>
+                    </Tooltip>
+                  </Td>
+                  <Td></Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </Box>
       ) : null}
     </Stack>
   );
