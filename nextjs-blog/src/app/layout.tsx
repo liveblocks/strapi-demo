@@ -1,9 +1,14 @@
 import "@/styles/globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Archivo } from "next/font/google";
 import { Header } from "@/components/site/Header";
 
-const inter = Inter({ subsets: ["latin"] });
+const archivo = Archivo({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-archivo",
+  weight: ["400", "500", "700"],
+});
 
 export const metadata: Metadata = {
   title: "Liveblocks",
@@ -15,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-theme="light">
+    <html lang="en" data-theme="dark">
       <head>
         <link
           href="https://liveblocks.io/favicon-32x32.png"
@@ -30,7 +35,7 @@ export default function RootLayout({
           type="image/png"
         />
       </head>
-      <body className={inter.className}>
+      <body className={archivo.variable}>
         <Header />
         {children}
       </body>

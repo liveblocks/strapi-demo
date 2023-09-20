@@ -5,6 +5,8 @@ import sanitizeHtml from "sanitize-html";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import { useBroadcastEvent, useEventListener } from "@/liveblocks.config";
 
+import styles from "./EditableTextClient.module.css";
+
 type Props = {
   strapiApiId: string;
   attribute: string;
@@ -66,8 +68,8 @@ export function EditableTextClient({
   });
 
   return (
-    <div style={{ display: "flex", justifyContent: "space-between" }}>
-      <ContentEditable onChange={onContentChange} html={text} />
+    <div className={styles.EditableTextClient}>
+      <ContentEditable onChange={onContentChange} html={text} data-editable />
       <button onClick={updateAttribute}>Save</button>
     </div>
   );

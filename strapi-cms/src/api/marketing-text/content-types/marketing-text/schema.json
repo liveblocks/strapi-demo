@@ -4,20 +4,27 @@
   "info": {
     "singularName": "marketing-text",
     "pluralName": "marketing-texts",
-    "displayName": "MarketingText"
+    "displayName": "MarketingText",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "BlogTitle": {
+    "HeroTitle": {
       "type": "string",
-      "required": true
+      "required": true,
+      "default": "Think better with Acme"
     },
-    "BlogDescription": {
+    "HeroDescription": {
       "type": "richtext",
-      "required": true
+      "required": true,
+      "default": "Never miss a note, idea or connection."
+    },
+    "HeroSubtitle": {
+      "type": "string",
+      "default": "New: Our AI integration just landed"
     }
   }
 }
