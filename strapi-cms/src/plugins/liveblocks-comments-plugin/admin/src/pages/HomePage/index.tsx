@@ -56,7 +56,7 @@ const HomePage = () => {
                   <Typography variant="sigma">Room ID</Typography>
                 </Th>
                 <Th>
-                  <Typography variant="sigma">Resolved</Typography>
+                  <Typography variant="sigma">Resolved thread(s)</Typography>
                 </Th>
                 <Th>
                   <Typography variant="sigma">Created</Typography>
@@ -85,6 +85,11 @@ const HomePage = () => {
                         style={{
                           fontVariantNumeric: "tabular-nums",
                         }}
+                        active={
+                          room.threads.filter(
+                            (thread) => thread.metadata.resolved
+                          ).length === room.threads.length
+                        }
                       >
                         {
                           room.threads.filter(
