@@ -16,7 +16,7 @@ type Props = {
   onPointerDown: PointerEventHandler<HTMLDivElement>;
   onPointerMove: PointerEventHandler<HTMLDivElement>;
   onPointerUp: PointerEventHandler<HTMLDivElement>;
-  onThreadFocus: () => void;
+  onFocus: () => void;
 };
 
 export function PinnedThread({
@@ -25,7 +25,7 @@ export function PinnedThread({
   onPointerDown,
   onPointerMove,
   onPointerUp,
-  onThreadFocus,
+  onFocus,
   ...props
 }: Props) {
   const [minimized, setMinimized] = useState(true);
@@ -55,7 +55,7 @@ export function PinnedThread({
   );
 
   return (
-    <div className={styles.pinnedThread} {...props}>
+    <div className={styles.pinnedThread} {...props} onClick={onFocus}>
       <div
         className={styles.avatarPin}
         onPointerDown={handlePointerDown}
@@ -72,11 +72,7 @@ export function PinnedThread({
       </div>
       {!minimized ? (
         <div className={styles.thread}>
-          <Thread
-            thread={thread}
-            onFocus={onThreadFocus}
-            indentCommentBody={false}
-          />
+          <Thread thread={thread} indentCommentBody={false} onFocus={onFocus} />
         </div>
       ) : null}
     </div>

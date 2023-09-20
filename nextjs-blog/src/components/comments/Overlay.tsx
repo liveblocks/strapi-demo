@@ -203,15 +203,19 @@ function OverlayThread({
     [editThreadMetadata, maxZIndex, thread, onDragChange]
   );
 
-  //  Increase z-index on last element updated
+  // If other thread(s) above, increase z-index on last element updated
   const handleIncreaseZIndex = useCallback(() => {
+    if (maxZIndex === thread.metadata.zIndex) {
+      return;
+    }
+
     editThreadMetadata({
       threadId: thread.id,
       metadata: {
         zIndex: maxZIndex + 1,
       },
     });
-  }, [thread.id, editThreadMetadata, maxZIndex]);
+  }, [thread, editThreadMetadata, maxZIndex]);
 
   if (!user || isLoading) {
     return null;
@@ -232,7 +236,7 @@ function OverlayThread({
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
-        onThreadFocus={handleIncreaseZIndex}
+        onFocus={handleIncreaseZIndex}
       />
     </div>
   );
