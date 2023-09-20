@@ -30,7 +30,7 @@ export function Sidebar({ onClose }: Props) {
             ) : (
               <DocumentMagnifyingIcon opacity="0.7" />
             )}
-            {resolvedThreadCount} / {threads.length} threads resolved
+            {resolvedThreadCount}/{threads.length} threads resolved
           </div>
           <button onClick={onClose} className={styles.sidebarClose}>
             <span className="sr-only">Close menu</span>
