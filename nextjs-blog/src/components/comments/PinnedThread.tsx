@@ -1,4 +1,4 @@
-import styles from "./PinnedThread.module.css";
+import styles from "./Pinned.module.css";
 import {
   PointerEvent,
   PointerEventHandler,
@@ -55,23 +55,18 @@ export function PinnedThread({
   );
 
   return (
-    <div className={styles.pinnedThread} {...props} onClick={onFocus}>
+    <div className={styles.pinned} {...props} onClick={onFocus}>
       <div
         className={styles.avatarPin}
         onPointerDown={handlePointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={handlePointerUp}
+        data-draggable={true}
       >
-        <img
-          src={user.avatar}
-          alt={user.name}
-          width="28px"
-          height="28px"
-          draggable={false}
-        />
+        <img src={user.avatar} alt={user.name} width="28px" height="28px" />
       </div>
       {!minimized ? (
-        <div className={styles.thread}>
+        <div className={styles.pinnedContent}>
           <Thread thread={thread} indentCommentBody={false} onFocus={onFocus} />
         </div>
       ) : null}

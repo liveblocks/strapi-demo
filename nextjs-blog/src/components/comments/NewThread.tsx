@@ -6,15 +6,14 @@ import {
   useRef,
   useState,
 } from "react";
-import { Composer } from "@liveblocks/react-comments";
 import * as Portal from "@radix-ui/react-portal";
-import { useCreateThread } from "@/liveblocks.config";
+import { useCreateThread, useSelf, useUser } from "@/liveblocks.config";
 import { ComposerSubmitComment } from "@liveblocks/react-comments/primitives";
 import styles from "./NewThread.module.css";
-import { OverlayTop } from "@/components/comments/OverlayTop";
 import { NewThreadCursor } from "@/components/comments/NewThreadCursor";
 import { getCoordsFromPointerEvent } from "@/lib/coords";
 import { Slot } from "@radix-ui/react-slot";
+import { PinnedComposer } from "@/components/comments/PinnedComposer";
 
 type ComposerCoords = null | { x: number; y: number };
 
@@ -39,6 +38,9 @@ export function NewThread({ children }: Props) {
   const [allowUseComposer, setAllowUseComposer] = useState(false);
   const allowComposerRef = useRef(allowUseComposer);
   allowComposerRef.current = allowUseComposer;
+
+  const self = useSelf((me) => me.id);
+  const { user } = useUser(self);
 
   useEffect(() => {
     if (creatingCommentState === "complete") {
@@ -167,13 +169,6 @@ export function NewThread({ children }: Props) {
     []
   );
 
-  // Close on pressing X
-  const handleOverlayClose = useCallback(() => {
-    setCreatingCommentState("complete");
-    setComposerCoords(null);
-    setAllowUseComposer(false);
-  }, []);
-
   // On composer submit, create thread and reset state
   const handleComposerSubmit = useCallback(
     ({ body }: ComposerSubmitComment, event: FormEvent<HTMLFormElement>) => {
@@ -210,6 +205,10 @@ export function NewThread({ children }: Props) {
     [createThread, composerCoords]
   );
 
+  if (!user) {
+    return null;
+  }
+
   return (
     <>
       <Slot
@@ -229,19 +228,14 @@ export function NewThread({ children }: Props) {
             pointerEvents: allowUseComposer ? "initial" : "none",
             transform: `translate(${composerCoords.x}px, ${composerCoords.y}px)`,
           }}
-          asChild
         >
-          <div
-            ref={composerRef}
-            className={styles.composer}
-            // style={{ pointerEvents: dragging.current ? "none" : "initial" }}
-          >
-            <OverlayTop
-              onPointerDown={handlePointerDownOverlay}
-              onClose={handleOverlayClose}
-            />
-            <Composer onComposerSubmit={handleComposerSubmit} />
-          </div>
+          <PinnedComposer
+            user={user}
+            onPointerDown={handlePointerDownOverlay}
+            onComposerSubmit={handleComposerSubmit}
+            onPointerUp={() => {}}
+            onPointerMove={() => {}}
+          />
         </Portal.Root>
       ) : null}
       <NewThreadCursor display={creatingCommentState === "placing"} />
