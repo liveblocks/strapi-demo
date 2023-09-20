@@ -4,6 +4,7 @@
 
 1. Go to `strapi-cms/src/plugins/liveblocks-comments-plugin` and use `npm run install`, then `npm run build`.
 2. Go to `strapi-cms` and use `npm run install`, then `npm run build`.
+3. Go to `nextjs-blog` and use `npm run install`.
 
 ## Run this project
 
