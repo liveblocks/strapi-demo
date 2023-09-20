@@ -19,7 +19,11 @@
 .HeroSubtitle {
   border-radius: 9999px;
   backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,11 +40,11 @@
 }
 
 .HeroWrapper > h1 {
-  max-width: 800px;
+  max-width: 860px;
 }
 
 .HeroWrapper > h1 [data-editable] {
-  font-size: 72px;
+  font-size: 80px;
   font-weight: 700;
   font-family: var(--font-archivo);
   text-align: center;
@@ -65,7 +69,11 @@
 .HeroScreenshot {
   width: 100%;
   aspect-ratio: 1/1;
-  background-color: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
   margin-top: var(--space-18);
