@@ -68,9 +68,9 @@ export function EditableTextClient({
   });
 
   return (
-    <div className={styles.EditableTextClient}>
+    <span className={styles.EditableTextClient}>
       <ContentEditable onChange={onContentChange} html={text} data-editable />
       <button onClick={updateAttribute}>Save</button>
-    </div>
+    </span>
   );
 }
