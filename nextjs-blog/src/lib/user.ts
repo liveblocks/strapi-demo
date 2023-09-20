@@ -2,17 +2,17 @@ const USER_INFO = [
   {
     id: "charlie-layne@example.com",
     info: {
-      name: "Charlie Layne",
+      name: "Jim Laurie",
       color: "#D583F0",
-      avatar: "https://liveblocks.io/avatars/avatar-1.png",
+      avatar: "/people/jim.png",
     },
   },
   {
     id: "mislav-abha@example.com",
     info: {
-      name: "Mislav Abha",
+      name: "Steven Fabre",
       color: "#F08385",
-      avatar: "https://liveblocks.io/avatars/avatar-2.png",
+      avatar: "/people/steven.png",
     },
   },
   {
@@ -26,41 +26,41 @@ const USER_INFO = [
   {
     id: "anjali-wanda@example.com",
     info: {
-      name: "Anjali Wanda",
+      name: "Chris Nicholas",
       color: "#85EED6",
-      avatar: "https://liveblocks.io/avatars/avatar-4.png",
+      avatar: "/people/chris.png",
     },
   },
   {
     id: "jody-hekla@example.com",
     info: {
-      name: "Jody Hekla",
+      name: "Alexandre Bodin",
       color: "#85BBF0",
-      avatar: "https://liveblocks.io/avatars/avatar-5.png",
+      avatar: "/people/alexandre.png",
     },
   },
   {
     id: "emil-joyce@example.com",
     info: {
-      name: "Emil Joyce",
+      name: "Pierre Burgy",
       color: "#8594F0",
-      avatar: "https://liveblocks.io/avatars/avatar-6.png",
+      avatar: "/people/pierre.png",
     },
   },
   {
     id: "jory-quispe@example.com",
     info: {
-      name: "Jory Quispe",
+      name: "Aurélien Georget",
       color: "#85DBF0",
-      avatar: "https://liveblocks.io/avatars/avatar-7.png",
+      avatar: "/people/aurelien.png",
     },
   },
   {
     id: "quinn-elton@example.com",
     info: {
-      name: "Quinn Elton",
+      name: "Adrien Gaudon",
       color: "#87EE85",
-      avatar: "https://liveblocks.io/avatars/avatar-8.png",
+      avatar: "/people/adrien.png",
     },
   },
 ];
