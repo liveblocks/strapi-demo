@@ -48,7 +48,7 @@ const RoomPage = (a) => {
         title="Threads"
         subtitle={`${threads.length} thread${
           threads.length > 1 ? "s" : ""
-        } found in room "${roomId}"`}
+        } found in room "${roomId}".`}
         as="h2"
       />
       <Box paddingLeft={10} paddingRight={10}>
@@ -62,7 +62,7 @@ const RoomPage = (a) => {
                 <Typography variant="sigma">Comment(s)</Typography>
               </Th>
               <Th>
-                <Typography variant="sigma">Created at</Typography>
+                <Typography variant="sigma">Created</Typography>
               </Th>
               <Th>
                 <VisuallyHidden>Actions</VisuallyHidden>
@@ -90,6 +90,7 @@ const RoomPage = (a) => {
                     </button>
                   </Tooltip>
                 </Td>
+                <Td></Td>
               </Tr>
             ))}
           </Tbody>
