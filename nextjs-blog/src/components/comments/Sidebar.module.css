@@ -1,3 +1,28 @@
+.sidebar[data-state="open"] {
+  animation: showSidebar 150ms ease-out;
+}
+.sidebar[data-state="closed"] {
+  animation: hideSidebar 100ms ease-out;
+}
+
+@keyframes showSidebar {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes hideSidebar {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
 .sidebarWrapper {
   position: fixed;
   top: var(--space-10);
