@@ -1,5 +1,6 @@
 import { Button } from "./Button";
 import styles from "./Toolbar.module.css";
+import sidebarStyles from "./Sidebar.module.css";
 
 import { List, More, Plus } from "@strapi/icons";
 import { useState } from "react";
@@ -37,7 +38,7 @@ export function Toolbar({ ...props }) {
           </Button>
         </div>
       </div>
-      <Collapsible.Content>
+      <Collapsible.Content className={sidebarStyles.sidebar}>
         <Sidebar onClose={() => setOpen(false)} />
       </Collapsible.Content>
     </Collapsible.Root>
