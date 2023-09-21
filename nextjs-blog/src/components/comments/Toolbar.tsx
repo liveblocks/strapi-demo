@@ -2,7 +2,7 @@ import { Button } from "./Button";
 import styles from "./Toolbar.module.css";
 import sidebarStyles from "./Sidebar.module.css";
 
-import { List, More, Plus } from "@strapi/icons";
+import { List, Plus } from "@strapi/icons";
 import { useState } from "react";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { NewThread } from "@/components/comments/NewThread";
@@ -36,11 +36,11 @@ export function Toolbar({ ...props }) {
         <ToolbarAvatars />
         <div className={styles.toolbarSeparator} />
         <div className={styles.toolbarActions}>
-          <Button variant="secondary">Save</Button>
+          {/*<Button variant="secondary">Save</Button>*/}
           <Button>Publish</Button>
-          <Button variant="ghost" square>
-            <More width={12} height={12} />
-          </Button>
+          {/*<Button variant="ghost" square>*/}
+          {/*  <More width={12} height={12} />*/}
+          {/*</Button>*/}
         </div>
       </div>
       <Collapsible.Content className={sidebarStyles.sidebar}>

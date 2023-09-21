@@ -119,6 +119,7 @@ export function EditableTextClient({
     >
       <ContentEditable
         tagName="span"
+        style={{ display: "block " }}
         onChange={onContentChange}
         html={text}
         data-editable
