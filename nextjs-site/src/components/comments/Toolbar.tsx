@@ -10,7 +10,7 @@ import { Sidebar } from "@/components/comments/Sidebar";
 import { ToolbarAvatars } from "@/components/comments/ToolbarAvatars";
 
 export function Toolbar({ ...props }) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   return (
     <Collapsible.Root
@@ -36,7 +36,7 @@ export function Toolbar({ ...props }) {
         <ToolbarAvatars />
         <div className={styles.toolbarSeparator} />
         <div className={styles.toolbarActions}>
-          {/*<Button variant="secondary">Save</Button>*/}
+          <Button variant="secondary">Save</Button>
           <Button>Publish</Button>
           {/*<Button variant="ghost" square>*/}
           {/*  <More width={12} height={12} />*/}

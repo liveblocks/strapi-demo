@@ -3,12 +3,7 @@
 import { CSSProperties, useCallback, useState } from "react";
 import sanitizeHtml from "sanitize-html";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
-import {
-  useBroadcastEvent,
-  useEventListener,
-  useOthers,
-  useUpdateMyPresence,
-} from "@/liveblocks.config";
+import { useBroadcastEvent, useEventListener, useOthers, useUpdateMyPresence } from "@/liveblocks.config";
 
 import styles from "./EditableTextClient.module.css";
 import { shallow } from "@liveblocks/core";
