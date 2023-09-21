@@ -105,7 +105,7 @@ export function getCoordsFromElement<El>(
   let classNameSelectors: string[] = [];
 
   let reachedBody = false;
-  let idFound = false;
+  let lowestId: null | string = null;
   pathArray.forEach((el) => {
     if (reachedBody) {
       return;
@@ -122,16 +122,14 @@ export function getCoordsFromElement<El>(
         Array.prototype.indexOf.call(el.parentNode.children, el) + 1;
       const currentNthChild = `${el.nodeName}:nth-child(${nthIndex})`;
       nthChildSelectors.push(currentNthChild);
+      if (!lowestId) {
+        nthChildFromLowestIdSelectors.push(currentNthChild);
+      }
     }
 
     // Selector same as above, but stops at nearest id
-    if (!idFound && el?.id && el?.parentNode?.children) {
-      idFound = true;
-      nthChildFromLowestIdSelectors = [`#${el.id}`];
-      const nthIndex =
-        Array.prototype.indexOf.call(el.parentNode.children, el) + 1;
-      const currentNthChild = `${el.nodeName}:nth-child(${nthIndex})`;
-      nthChildFromLowestIdSelectors.push(currentNthChild);
+    if (!lowestId && el?.id && el?.parentNode?.children) {
+      lowestId = el.id;
     }
 
     // Selector with just class names
@@ -147,8 +145,10 @@ export function getCoordsFromElement<El>(
   });
 
   // If no id found, selector not needed
-  if (!idFound) {
+  if (!lowestId) {
     nthChildFromLowestIdSelectors = [];
+  } else {
+    nthChildFromLowestIdSelectors.push(`#${lowestId}`);
   }
 
   // Create CSS selectors
