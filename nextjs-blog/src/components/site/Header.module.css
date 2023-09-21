@@ -1,8 +1,6 @@
 .Header {
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
+  position: relative;
+  z-index: 1;
   color: white;
 }
 

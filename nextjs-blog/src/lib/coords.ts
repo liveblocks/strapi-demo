@@ -159,6 +159,7 @@ export function getCoordsFromElement<El>(
   if (!lowestId) {
     nthChildFromLowestIdSelectors = [];
   } else {
+    nthChildFromLowestIdSelectors.pop();
     nthChildFromLowestIdSelectors.push(`#${lowestId}`);
   }
 
