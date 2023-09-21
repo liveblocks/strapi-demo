@@ -13,7 +13,12 @@ export function Toolbar({ ...props }) {
   const [open, setOpen] = useState(true);
 
   return (
-    <Collapsible.Root open={open} onOpenChange={setOpen} {...props}>
+    <Collapsible.Root
+      open={open}
+      onOpenChange={setOpen}
+      {...props}
+      data-hide-cursors
+    >
       <div className={styles.toolbar}>
         <div className={styles.toolbarActions}>
           <NewThread>

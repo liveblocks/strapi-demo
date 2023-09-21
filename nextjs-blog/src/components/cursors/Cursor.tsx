@@ -12,15 +12,17 @@ type Props = {
 
 function CursorComponent({ connectionId }: Props) {
   // Get this user's cursor positions from presence
-  const { presence, info } = useOther(connectionId, (other) => other);
-  if (!presence?.cursor) {
+  const info = useOther(connectionId, (other) => other.info);
+  const cursor = useOther(connectionId, (other) => other.presence.cursor);
+
+  if (!cursor || !info) {
     return null;
   }
 
   // Convert CSS selectors and x/y percentage into x/y px on page
-  const position = getCoordsFromAccurateCursorPositions(presence.cursor);
+  const position = getCoordsFromAccurateCursorPositions(cursor);
   if (!position) {
-    return;
+    return null;
   }
 
   const coords = { x: position.x, y: position.y };

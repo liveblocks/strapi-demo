@@ -31,7 +31,10 @@ export function CommentsOverlay() {
   }, [threads]);
 
   return (
-    <div style={{ pointerEvents: beingDragged ? "none" : "auto" }}>
+    <div
+      style={{ pointerEvents: beingDragged ? "none" : "auto" }}
+      data-hide-cursors
+    >
       {threads
         .filter((thread) => !thread.metadata.resolved)
         .map((thread) => (

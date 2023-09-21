@@ -104,10 +104,17 @@ export function getCoordsFromElement<El>(
   let nthChildSelectors: string[] = [];
   let classNameSelectors: string[] = [];
 
+  let dontShowCursors = false;
   let reachedBody = false;
   let lowestId: null | string = null;
+
   pathArray.forEach((el) => {
-    if (reachedBody) {
+    if (reachedBody || dontShowCursors) {
+      return;
+    }
+
+    if ((el as HTMLElement)?.dataset.hideCursors) {
+      dontShowCursors = true;
       return;
     }
 
@@ -144,6 +151,10 @@ export function getCoordsFromElement<El>(
     }
   });
 
+  if (dontShowCursors) {
+    return null;
+  }
+
   // If no id found, selector not needed
   if (!lowestId) {
     nthChildFromLowestIdSelectors = [];
@@ -160,7 +171,8 @@ export function getCoordsFromElement<El>(
   // If last element has id or data-strapi-editable
   const lastElement = pathArray[pathArray.length - 1];
   const id = lastElement?.id || "";
-  const strapiData = (lastElement as any)?.dataset?.["strapi-editable"] || "";
+  const strapiData =
+    (lastElement as HTMLElement)?.dataset?.["strapi-editable"] || "";
 
   // Get percentage across current element
   const rect = target.getBoundingClientRect();
