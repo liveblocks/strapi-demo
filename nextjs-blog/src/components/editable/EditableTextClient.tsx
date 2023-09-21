@@ -118,6 +118,7 @@ export function EditableTextClient({
       }
     >
       <ContentEditable
+        tagName="span"
         onChange={onContentChange}
         html={text}
         data-editable
