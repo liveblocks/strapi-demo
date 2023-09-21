@@ -74,7 +74,8 @@ const HomePage = () => {
                 <Tr key={room.id}>
                   <Td>
                     <Link
-                      to={`${pluginId}/room/${encodeURIComponent(room.id)}`}
+                      // to={`${pluginId}/room/${encodeURIComponent(room.id)}`}
+                      href={room.id}
                     >
                       {room.id}
                     </Link>
