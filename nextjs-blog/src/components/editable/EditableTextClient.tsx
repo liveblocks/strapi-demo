@@ -84,10 +84,11 @@ export function EditableTextClient({
 
   // On blur, hide button and reset your presence
   const handleBlur = useCallback(() => {
-    // Timeout so button stays clickable
+    updateMyPresence({ editingText: null });
+
+    // Timeout so button briefly stays clickable
     setTimeout(() => {
       setFocused(false);
-      updateMyPresence({ editingText: null });
     }, 50);
   }, [updateMyPresence]);
 
