@@ -16,14 +16,6 @@ const USER_INFO = [
     },
   },
   {
-    id: "tatum-paolo@example.com",
-    info: {
-      name: "Tatum Paolo",
-      color: "#F0D885",
-      avatar: "https://liveblocks.io/avatars/avatar-3.png",
-    },
-  },
-  {
     id: "anjali-wanda@example.com",
     info: {
       name: "Chris Nicholas",

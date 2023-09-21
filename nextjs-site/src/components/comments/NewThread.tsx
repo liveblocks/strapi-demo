@@ -14,6 +14,7 @@ import { NewThreadCursor } from "@/components/comments/NewThreadCursor";
 import { getCoordsFromPointerEvent } from "@/lib/coords";
 import { Slot } from "@radix-ui/react-slot";
 import { PinnedComposer } from "@/components/comments/PinnedComposer";
+import { useMaxZIndex } from "@/lib/useMaxZIndex";
 
 type ComposerCoords = null | { x: number; y: number };
 
@@ -26,6 +27,7 @@ export function NewThread({ children }: Props) {
     "placing" | "placed" | "complete"
   >("complete");
   const createThread = useCreateThread();
+  const maxZIndex = useMaxZIndex();
 
   const composerRef = useRef<HTMLDivElement>(null);
   const [composerCoords, setComposerCoords] = useState<ComposerCoords>(null);
@@ -207,7 +209,7 @@ export function NewThread({ children }: Props) {
           cursorX,
           cursorY,
           resolved: false,
-          zIndex: 0,
+          zIndex: maxZIndex + 1,
         },
       });
 
@@ -215,7 +217,7 @@ export function NewThread({ children }: Props) {
       setCreatingCommentState("complete");
       setAllowUseComposer(false);
     },
-    [createThread, composerCoords]
+    [createThread, composerCoords, maxZIndex]
   );
 
   if (!user) {
@@ -241,6 +243,7 @@ export function NewThread({ children }: Props) {
             pointerEvents: allowUseComposer ? "initial" : "none",
             transform: `translate(${composerCoords.x}px, ${composerCoords.y}px)`,
           }}
+          data-hide-cursors
         >
           <PinnedComposer
             user={user}

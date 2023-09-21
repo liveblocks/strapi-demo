@@ -7,7 +7,7 @@ import {
   useUser,
 } from "@/liveblocks.config";
 import { ThreadData } from "@liveblocks/client";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./CommentsOverlay.module.css";
 import {
   getCoordsFromAccurateCursorPositions,
@@ -15,20 +15,12 @@ import {
   getElementBeneath,
 } from "@/lib/coords";
 import { PinnedThread } from "@/components/comments/PinnedThread";
+import { useMaxZIndex } from "@/lib/useMaxZIndex";
 
 export function CommentsOverlay() {
   const threads = useThreads();
   const [beingDragged, setBeingDragged] = useState(false);
-
-  const maxZIndex = useMemo(() => {
-    let max = 0;
-    for (const thread of threads) {
-      if (thread.metadata.zIndex > max) {
-        max = thread.metadata.zIndex;
-      }
-    }
-    return max;
-  }, [threads]);
+  const maxZIndex = useMaxZIndex();
 
   return (
     <div

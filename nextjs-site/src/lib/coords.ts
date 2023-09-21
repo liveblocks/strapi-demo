@@ -10,64 +10,17 @@ export function getCoordsFromPointerEvent<El>(
 
   const target = e.target as HTMLElement;
 
-  // === GET SELECTORS FOR CURRENT ELEMENT =======================================
+  // Get all parent elements
   const pathArray: HTMLElement[] =
     (e as any)._savedComposedPath || e.composedPath() || (e as any).path;
 
-  let nthChildFromLowestIdSelectors: string[] = [];
-  let nthChildSelectors: string[] = [];
-  let classNameSelectors: string[] = [];
+  // Generate a set of CSS selectors using the path
+  const cursorSelectors = generateSelectors(pathArray)
 
-  let reachedBody = false;
-  let idFound = false;
-  pathArray.forEach((el) => {
-    if (reachedBody) {
-      return;
-    }
-
-    if (el.nodeName?.toLowerCase() === "body") {
-      reachedBody = true;
-    }
-
-    // Selector with nth child and HTML element types
-    // More performant than: [...el.parentNode.children].indexOf(el) + 1
-    if (el?.parentNode?.children) {
-      const nthIndex =
-        Array.prototype.indexOf.call(el.parentNode.children, el) + 1;
-      const currentNthChild = `${el.nodeName}:nth-child(${nthIndex})`;
-      nthChildSelectors.push(currentNthChild);
-      nthChildFromLowestIdSelectors.push(currentNthChild);
-    }
-
-    // Selector same as above, but stops at nearest id
-    if (el?.id) {
-      idFound = true;
-      nthChildFromLowestIdSelectors = [`#${el.id}`];
-    }
-
-    // Selector with just class names
-    // More performant than: [...el.classList].map(CSS.escape).join('.')
-    const classes = Array.prototype.map
-      .call(el.classList, CSS.escape)
-      .join(".");
-    classNameSelectors.push(el.nodeName + (classes ? "." + classes : ""));
-  });
-
-  // If no id found, selector not needed
-  if (!idFound) {
-    nthChildFromLowestIdSelectors = [];
+  // Don't show cursor
+  if (!cursorSelectors) {
+    return null;
   }
-
-  // Create CSS selectors
-  const classNamePath = classNameSelectors.reverse().join(">") || "";
-  const nthChildPath = nthChildSelectors.reverse().join(">") || "";
-  const nthChildPathFromLowestId =
-    nthChildFromLowestIdSelectors.reverse().join(">") || "";
-
-  // If last element has id or data-strapi-editable
-  const lastElement = pathArray[pathArray.length - 1];
-  const id = lastElement?.id || "";
-  const strapiData = lastElement?.dataset?.["strapi-editable"] || "";
 
   // Get percentage across current element
   const { width, height } = target.getBoundingClientRect();
@@ -75,13 +28,7 @@ export function getCoordsFromPointerEvent<El>(
   const yPercent = (e.offsetY - dragOffset.y) / height;
 
   return {
-    cursorSelectors: [
-      strapiData,
-      id,
-      nthChildPathFromLowestId,
-      nthChildPath,
-      classNamePath,
-    ].filter((selector) => selector),
+    cursorSelectors,
     cursorX: xPercent,
     cursorY: yPercent,
   };
@@ -97,9 +44,30 @@ export function getCoordsFromElement<El>(
     return null;
   }
 
-  // === GET SELECTORS FOR CURRENT ELEMENT =======================================
+  // Get all parent elements
   const pathArray: Element[] = composedPathForElement(target);
 
+  // Generate a set of CSS selectors using the path
+  const cursorSelectors = generateSelectors(pathArray)
+
+  // Don't show cursor
+  if (!cursorSelectors) {
+    return null;
+  }
+
+  // Get percentage across current element
+  const { top, left, width, height } = target.getBoundingClientRect();
+  const xPercent = (clientX - left - dragOffset.x) / width;
+  const yPercent = (clientY - top - dragOffset.y) / height;
+
+  return {
+    cursorSelectors,
+    cursorX: xPercent,
+    cursorY: yPercent,
+  };
+}
+
+function generateSelectors(pathArray: Element[]): string[] | null {
   let nthChildFromLowestIdSelectors: string[] = [];
   let nthChildSelectors: string[] = [];
   let classNameSelectors: string[] = [];
@@ -175,22 +143,12 @@ export function getCoordsFromElement<El>(
   const strapiData =
     (lastElement as HTMLElement)?.dataset?.["strapi-editable"] || "";
 
-  // Get percentage across current element
-  const rect = target.getBoundingClientRect();
-  const xPercent = (clientX - rect.left - dragOffset.x) / rect.width;
-  const yPercent = (clientY - rect.top - dragOffset.y) / rect.height;
-
-  return {
-    cursorSelectors: [
-      id,
-      strapiData,
-      nthChildPathFromLowestId,
-      nthChildPath,
-      classNamePath,
-    ].filter((selector) => selector),
-    cursorX: xPercent,
-    cursorY: yPercent,
-  };
+  return [
+    id,
+    nthChildPathFromLowestId,
+    nthChildPath,
+    classNamePath,
+  ].filter((selector) => selector)
 }
 
 export function getCoordsFromAccurateCursorPositions({
