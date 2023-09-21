@@ -8,7 +8,7 @@ import {
 } from "@/liveblocks.config";
 import { ThreadData } from "@liveblocks/client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import styles from "./Overlay.module.css";
+import styles from "./CommentsOverlay.module.css";
 import {
   getCoordsFromAccurateCursorPositions,
   getCoordsFromElement,
@@ -16,7 +16,7 @@ import {
 } from "@/lib/coords";
 import { PinnedThread } from "@/components/comments/PinnedThread";
 
-export function Overlay() {
+export function CommentsOverlay() {
   const threads = useThreads();
   const [beingDragged, setBeingDragged] = useState(false);
 
@@ -224,6 +224,7 @@ function OverlayThread({
   return (
     <div
       ref={threadRef}
+      id={`thread-${thread.id}`}
       className={styles.overlayWrapper}
       style={{
         transform: `translate(${coords.x}px, ${coords.y}px)`,

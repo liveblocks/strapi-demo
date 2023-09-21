@@ -125,7 +125,7 @@ export function getCoordsFromElement<El>(
     }
 
     // Selector same as above, but stops at nearest id
-    if (el?.id && el?.parentNode?.children) {
+    if (!idFound && el?.id && el?.parentNode?.children) {
       idFound = true;
       nthChildFromLowestIdSelectors = [`#${el.id}`];
       const nthIndex =
@@ -160,7 +160,7 @@ export function getCoordsFromElement<El>(
   // If last element has id or data-strapi-editable
   const lastElement = pathArray[pathArray.length - 1];
   const id = lastElement?.id || "";
-  const strapiData = lastElement?.dataset?.["strapi-editable"] || "";
+  const strapiData = (lastElement as any)?.dataset?.["strapi-editable"] || "";
 
   // Get percentage across current element
   const rect = target.getBoundingClientRect();
@@ -169,8 +169,8 @@ export function getCoordsFromElement<El>(
 
   return {
     cursorSelectors: [
-      strapiData,
       id,
+      strapiData,
       nthChildPathFromLowestId,
       nthChildPath,
       classNamePath,

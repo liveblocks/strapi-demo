@@ -68,7 +68,10 @@ export function EditableTextClient({
   });
 
   return (
-    <span className={styles.EditableTextClient}>
+    <span
+      className={styles.EditableTextClient}
+      data-strapi-editable={`${strapiApiId}/${attribute}`}
+    >
       <ContentEditable onChange={onContentChange} html={text} data-editable />
       <button onClick={updateAttribute}>Save</button>
     </span>

@@ -3,6 +3,8 @@
 import React, { memo } from "react";
 import { useOther } from "@/liveblocks.config";
 import { getCoordsFromAccurateCursorPositions } from "@/lib/coords";
+import { motion } from "framer-motion";
+import styles from "./Cursor.module.css";
 
 type Props = {
   connectionId: number;
@@ -10,37 +12,54 @@ type Props = {
 
 function CursorComponent({ connectionId }: Props) {
   // Get this user's cursor positions from presence
-  const otherPresence = useOther(connectionId, (other) => other.presence);
-  if (!otherPresence?.cursor) {
+  const { presence, info } = useOther(connectionId, (other) => other);
+  if (!presence?.cursor) {
     return null;
   }
 
   // Convert CSS selectors and x/y percentage into x/y px on page
-  const position = getCoordsFromAccurateCursorPositions(otherPresence.cursor);
+  const position = getCoordsFromAccurateCursorPositions(presence.cursor);
   if (!position) {
     return;
   }
 
+  const coords = { x: position.x, y: position.y };
+
   return (
-    <svg
-      style={{
-        position: "absolute",
-        left: 0,
-        top: 0,
-        transform: `translateX(${position.x}px) translateY(${position.y}px)`,
-        pointerEvents: "none",
+    <motion.div
+      aria-hidden="true"
+      className={styles.Cursor}
+      initial={coords}
+      animate={coords}
+      transition={{
+        type: "spring",
+        damping: 30,
+        mass: 0.8,
+        stiffness: 350,
       }}
-      width="24"
-      height="36"
-      viewBox="0 0 24 36"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
     >
-      <path
-        d="M5.65376 12.3673H5.46026L5.31717 12.4976L0.500002 16.8829L0.500002 1.19841L11.7841 12.3673H5.65376Z"
-        fill={"red"}
-      />
-    </svg>
+      <svg
+        className="h-4 w-auto lg:h-5"
+        viewBox="0 0 23 22"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M1.24177 0.0522243L21.6392 7.0936H21.667C21.8429 7.15694 21.9944 7.26959 22.1012 7.41658C22.2081 7.56357 22.2653 7.73795 22.2653 7.91656C22.2653 8.09516 22.2081 8.26954 22.1012 8.41653C21.9944 8.56353 21.8429 8.67618 21.667 8.73952L12.7663 12.1194L9.20604 20.569C9.13733 20.7328 9.01841 20.8732 8.86467 20.9721C8.71094 21.0709 8.52947 21.1237 8.34378 21.1235C8.15324 21.1235 7.96735 21.0676 7.8114 20.9637C7.65546 20.8598 7.53704 20.7127 7.47225 20.5426L0.055012 1.17884C-0.00472376 1.02164 -0.016082 0.851545 0.0222651 0.688441C0.0606122 0.525336 0.14708 0.375966 0.271558 0.257796C0.396035 0.139626 0.553379 0.0575406 0.72519 0.0211368C0.897001 -0.0152671 1.07618 -0.00448438 1.24177 0.0522243Z"
+          style={{
+            fill: "red",
+          }}
+          fill="currentFill"
+        />
+      </svg>
+      <span
+        style={{
+          backgroundColor: "red",
+        }}
+      >
+        {info.name}
+      </span>
+    </motion.div>
   );
 }
 

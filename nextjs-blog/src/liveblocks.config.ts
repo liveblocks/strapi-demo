@@ -3,7 +3,7 @@ import { createRoomContext } from "@liveblocks/react";
 
 const client = createClient({
   authEndpoint: "/api/liveblocks-auth",
-  // throttle: 100,
+  throttle: 30,
 });
 
 export type AccurateCursorPositions = {
