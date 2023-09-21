@@ -44,7 +44,10 @@ export function EditableTextClient({
   // On save, send data to server component above
   const updateAttribute = useCallback(async () => {
     const result = await onUpdate(text);
+
+    // If it goes wrong, revalidate
     if (!result) {
+      await onRevalidate();
       return;
     }
 
@@ -55,7 +58,7 @@ export function EditableTextClient({
       attribute,
       newText: text,
     });
-  }, [broadcast, strapiApiId, attribute, text, onUpdate]);
+  }, [broadcast, strapiApiId, attribute, text, onUpdate, onRevalidate]);
 
   // Listen for update events for this EditableText component
   useEventListener(async ({ event }) => {
