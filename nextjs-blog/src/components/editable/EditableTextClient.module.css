@@ -23,6 +23,7 @@
 
 .EditableTextClient [data-editable] {
   border-radius: 4px;
+  margin: 0 !important;
 }
 
 .EditableTextClient [data-editable]:hover {
@@ -31,4 +32,39 @@
 
 .EditableTextClient [data-editable]:focus-visible {
   outline: 2px solid var(--color-accent);
+}
+
+.EditableTextClient[data-others-editing] [data-editable] {
+  outline: 2px solid var(--others-editing-color);
+  border-top-left-radius: 0;
+}
+
+.OthersEditing {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  display: flex;
+  align-items: start;
+  gap: 4px;
+}
+
+.OtherEditing {
+  color: var(--color-text);
+  white-space: nowrap;
+  margin-left: -2px;
+  margin-bottom: 2px;
+  border-radius: 4px;
+  padding: 8px 8px 0 8px;
+  font-size: 14px;
+  font-weight: 500;
+  height: 28px;
+  background: var(--other-editing-color);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  line-height: 0.95;
+}
+
+.OtherEditing:first-of-type {
+  padding: 8px 8px 0 8px;
+  margin-bottom: 0;
 }

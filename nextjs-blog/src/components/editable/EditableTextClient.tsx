@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { CSSProperties, useCallback, useState } from "react";
 import sanitizeHtml from "sanitize-html";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import {
@@ -84,12 +84,15 @@ export function EditableTextClient({
 
   // On blur, hide button and reset your presence
   const handleBlur = useCallback(() => {
-    setFocused(false);
-    updateMyPresence({ editingText: null });
+    // Timeout so button stays clickable
+    setTimeout(() => {
+      setFocused(false);
+      updateMyPresence({ editingText: null });
+    }, 50);
   }, [updateMyPresence]);
 
   // Find other users that are currently editing this
-  const others = useOthers(
+  const othersEditing = useOthers(
     (others) =>
       others.filter(
         (other) => other.presence.editingText === `${strapiApiId}/${attribute}`
@@ -101,6 +104,14 @@ export function EditableTextClient({
     <span
       className={styles.EditableTextClient}
       data-strapi-editable={`${strapiApiId}/${attribute}`}
+      data-others-editing={othersEditing.length ? true : undefined}
+      style={
+        {
+          "--others-editing-color": othersEditing.length
+            ? othersEditing[0].info.color
+            : undefined,
+        } as CSSProperties
+      }
     >
       <ContentEditable
         onChange={onContentChange}
@@ -108,13 +119,23 @@ export function EditableTextClient({
         data-editable
         onFocus={handleFocus}
         onBlur={handleBlur}
-        style={{
-          outline: others.length
-            ? `2px solid ${others[0].info.color}`
-            : undefined,
-        }}
       />
-      {focused ? <button onClick={updateAttribute}>Save</button> : null}
+      {focused ? <button onPointerDown={updateAttribute}>Save</button> : null}
+      {othersEditing.length ? (
+        <div className={styles.OthersEditing}>
+          {othersEditing.map((other) => (
+            <div
+              key={other.connectionId}
+              className={styles.OtherEditing}
+              style={
+                { "--other-editing-color": other.info.color } as CSSProperties
+              }
+            >
+              {other.info.name}
+            </div>
+          ))}
+        </div>
+      ) : null}
     </span>
   );
 }
