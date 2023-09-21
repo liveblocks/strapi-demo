@@ -30,6 +30,7 @@
   bottom: var(--space-10);
   width: 400px;
   max-width: 90%;
+  pointer-events: none;
 }
 
 .sidebar {
@@ -42,6 +43,7 @@
   max-height: 100%;
   overflow-y: auto;
   z-index: var(--z-comments-sidemenu);
+  pointer-events: all;
 }
 
 .sidebarTop {

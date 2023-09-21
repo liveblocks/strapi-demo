@@ -44,7 +44,7 @@ export function Sidebar({ onClose }: Props) {
               className={styles.sidebarThread}
               data-thread-resolved={thread.metadata.resolved || undefined}
             >
-              <Thread thread={thread} />
+              <Thread thread={thread} indentCommentBody={false} />
             </div>
           ))}
         </div>

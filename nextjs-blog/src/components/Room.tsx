@@ -10,16 +10,9 @@ export function Room({ children }: Props) {
   // Using the current path as a unique room id
   const pathname = usePathname();
 
-  // Display edit controls if `?edit=true`
-  // const searchParams = useSearchParams();
-  // if (searchParams.get("edit") !== "true") {
-  //   return children;
-  // }
-
   return (
     <RoomProvider
-      // id={"http://localhost:3000" + pathname}
-      id="my-temporary-room-name-99"
+      id={"http://localhost:3000" + pathname}
       initialPresence={{ cursor: null }}
     >
       {children}
