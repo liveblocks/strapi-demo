@@ -13,7 +13,8 @@
 }
 
 .lb-tooltip,
-.lb-dropdown-item {
+.lb-dropdown-item,
+.lb-composer-suggestions {
   z-index: var(--z-above-comments-sidemenu);
 }
 
