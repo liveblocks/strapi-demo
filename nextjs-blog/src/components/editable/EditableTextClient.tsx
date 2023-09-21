@@ -3,9 +3,15 @@
 import { useCallback, useState } from "react";
 import sanitizeHtml from "sanitize-html";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
-import { useBroadcastEvent, useEventListener } from "@/liveblocks.config";
+import {
+  useBroadcastEvent,
+  useEventListener,
+  useOthers,
+  useUpdateMyPresence,
+} from "@/liveblocks.config";
 
 import styles from "./EditableTextClient.module.css";
+import { shallow } from "@liveblocks/core";
 
 type Props = {
   strapiApiId: string;
@@ -22,9 +28,10 @@ export function EditableTextClient({
   onUpdate,
   onRevalidate,
 }: Props) {
-  const [text, setText] = useState(initial);
   const broadcast = useBroadcastEvent();
+  const [text, setText] = useState(initial);
 
+  // Sanitize
   const onContentChange = useCallback((e: ContentEditableEvent) => {
     const sanitizeConf = {
       allowedTags: ["b", "i", "a", "p"],
@@ -37,7 +44,6 @@ export function EditableTextClient({
   // On save, send data to server component above
   const updateAttribute = useCallback(async () => {
     const result = await onUpdate(text);
-
     if (!result) {
       return;
     }
@@ -67,13 +73,48 @@ export function EditableTextClient({
     }
   });
 
+  const [focused, setFocused] = useState(false);
+  const updateMyPresence = useUpdateMyPresence();
+
+  // Show button on focus and tell others you're updating it
+  const handleFocus = useCallback(() => {
+    setFocused(true);
+    updateMyPresence({ editingText: `${strapiApiId}/${attribute}` });
+  }, [updateMyPresence, strapiApiId, attribute]);
+
+  // On blur, hide button and reset your presence
+  const handleBlur = useCallback(() => {
+    setFocused(false);
+    updateMyPresence({ editingText: null });
+  }, [updateMyPresence]);
+
+  // Find other users that are currently editing this
+  const others = useOthers(
+    (others) =>
+      others.filter(
+        (other) => other.presence.editingText === `${strapiApiId}/${attribute}`
+      ),
+    shallow
+  );
+
   return (
     <span
       className={styles.EditableTextClient}
       data-strapi-editable={`${strapiApiId}/${attribute}`}
     >
-      <ContentEditable onChange={onContentChange} html={text} data-editable />
-      <button onClick={updateAttribute}>Save</button>
+      <ContentEditable
+        onChange={onContentChange}
+        html={text}
+        data-editable
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        style={{
+          outline: others.length
+            ? `2px solid ${others[0].info.color}`
+            : undefined,
+        }}
+      />
+      {focused ? <button onClick={updateAttribute}>Save</button> : null}
     </span>
   );
 }

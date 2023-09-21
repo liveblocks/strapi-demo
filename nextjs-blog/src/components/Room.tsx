@@ -13,7 +13,7 @@ export function Room({ children }: Props) {
   return (
     <RoomProvider
       id={"http://localhost:3000" + pathname}
-      initialPresence={{ cursor: null }}
+      initialPresence={{ cursor: null, editingText: null }}
     >
       {children}
     </RoomProvider>

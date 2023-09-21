@@ -24,6 +24,7 @@ type Presence = {
   // cursor: { x: number, y: number } | null,
   // ...
   cursor: AccurateCursorPositions | null;
+  editingText: `${string}/${string}` | null;
 };
 
 // Optionally, Storage represents the shared document that persists in the
