@@ -5,11 +5,24 @@
 1. Create an account on [liveblocks.io](https://liveblocks.io/dashboard)
 2. Copy your **secret** key from the
   [dashboard](https://liveblocks.io/dashboard/apikeys).
-3. Create a new file, `nextjs-site/.env.local`and add your **secret** key as the
-  `LIVEBLOCKS_SECRET_KEY` environment variable.
-4. Add `STRAPI_BASE_URL=http://127.0.0.1:1337` to this file
-5. Create a new file, `strapi-cms/.env`and add your **secret** key as the
-  `LIVEBLOCKS_SECRET_KEY` environment variable.
+3. Create a new file, `nextjs-site/.env.local`, adding your secret key:
+```bash
+LIVEBLOCKS_SECRET_KEY=
+STRAPI_BASE_URL=http://127.0.0.1:1337
+```
+4. Create a new file, `strapi-cms/.env` adding your secret key:
+```bash
+LIVEBLOCKS_SECRET_KEY=
+HOST=0.0.0.0
+PORT=1337
+APP_KEYS=FBLOQQbo8bWnHZqJ95s9KA==,M99BYUU0exAe41Z9qsZSyA==,Kbk51gjo25+xicjl3fNCFQ==,uTOxT189fqv0m2EEmXyAyg==
+API_TOKEN_SALT=XOJKLLsAjBt8k405Jq5E2g==
+ADMIN_JWT_SECRET=AC6/KiiHjvdpuOvZUDh3Xw==
+TRANSFER_TOKEN_SALT=7GCMWN4bygKLR1vdhUxbSw==
+DATABASE_CLIENT=sqlite
+DATABASE_FILENAME=.tmp/data.db
+JWT_SECRET=Q5E1IK6k8DoKE12Slhgiaw==
+```
 
 ## Install this project
 
