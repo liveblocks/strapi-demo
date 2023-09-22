@@ -1,4 +1,6 @@
-# strapi-demo
+# Strapi + Liveblocks demo
+
+![image](https://github.com/liveblocks/strapi-demo/assets/33033422/b02be364-8ea7-42a1-b813-ee14f94ce9e9)
 
 ## Create environment variables
 
