@@ -51,3 +51,5 @@ Note that you'll get a `fetch` error the first time you run the project. To fix 
 [hoMvJNpA0w.webm](https://github.com/liveblocks/strapi-demo/assets/33033422/1716eb65-4a87-4873-86ad-5eafca4beb30)
 
 4. Refresh the Next.js project to see the data load correctly.
+
+![image](https://github.com/liveblocks/strapi-demo/assets/33033422/63f38262-b071-4d32-90f7-401ef69ad74e)
