@@ -12,6 +12,7 @@ import {
 
 import styles from "./EditableTextClient.module.css";
 import { shallow } from "@liveblocks/core";
+import { ClientSideSuspense } from "@liveblocks/react";
 
 type Props = {
   strapiApiId: string;
@@ -21,7 +22,22 @@ type Props = {
   onRevalidate: () => Promise<string>;
 };
 
-export function EditableTextClient({
+// Show initial server value whilst Liveblocks connects
+export function EditableTextClient(props: Props) {
+  return (
+    <ClientSideSuspense
+      fallback={
+        <span data-strapi-editable={`${props.strapiApiId}/${props.attribute}`}>
+          <span data-editable>{props.initial}</span>
+        </span>
+      }
+    >
+      {() => <LiveblocksEditableText {...props} />}
+    </ClientSideSuspense>
+  );
+}
+
+function LiveblocksEditableText({
   strapiApiId,
   attribute,
   initial,
@@ -126,7 +142,11 @@ export function EditableTextClient({
         onFocus={handleFocus}
         onBlur={handleBlur}
       />
-      {focused ? <button onPointerDown={updateAttribute}>Save</button> : null}
+      {focused ? (
+        <button className={styles.SaveButton} onPointerDown={updateAttribute}>
+          Save
+        </button>
+      ) : null}
       {othersEditing.length ? (
         <span className={styles.OthersEditing}>
           {othersEditing.map((other) => (
