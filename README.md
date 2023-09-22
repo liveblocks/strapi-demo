@@ -36,3 +36,12 @@ JWT_SECRET=Q5E1IK6k8DoKE12Slhgiaw==
 2. Open `nextjs-site` and use `npm run dev`.
 3. Navigate to [`http://localhost:3000`](http://localhost:3000) to view the Next.js app.
 4. Find the Strapi admin, with comments plugin, at [`http://localhost:8000`](http://localhost:8000).
+
+Note that you'll get a `fetch` error the first time you run the project. To fix it, do this:
+
+## First time signing in
+
+1. After navigating to [`http://localhost:8000`](http://localhost:8000), sign up as a new user.
+![image](https://github.com/liveblocks/strapi-demo/assets/33033422/a6dd64a7-4320-4181-9912-6f66909d2c9e)
+2. Enable the API by going to Settings → Users & Permissions PLugin → Roles → Marketing-text, ticking `find` and `update`, then pressing Save.
+[iYRYlVfffy.webm](https://github.com/liveblocks/strapi-demo/assets/33033422/438ff596-485f-4916-a519-550a393c7e3e)
