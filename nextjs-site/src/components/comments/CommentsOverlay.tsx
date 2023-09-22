@@ -153,7 +153,13 @@ function OverlayThread({
         return;
       }
 
-      try {
+      updateCoords();
+
+      function updateCoords() {
+        if (!threadRef.current) {
+          return;
+        }
+
         const elementUnder = getElementBeneath(
           threadRef.current,
           e.clientX - dragOffset.current.x,
@@ -161,7 +167,7 @@ function OverlayThread({
         );
 
         if (!elementUnder) {
-          throw new Error("Element under");
+          return;
         }
 
         const accurateCoords = getCoordsFromElement(
@@ -170,8 +176,9 @@ function OverlayThread({
           e.clientY,
           dragOffset.current
         );
+
         if (!accurateCoords) {
-          throw new Error("Accurate coords");
+          return;
         }
 
         const { cursorSelectors, cursorX, cursorY } = accurateCoords;
@@ -187,13 +194,12 @@ function OverlayThread({
           threadId: thread.id,
           metadata,
         });
-      } catch (err) {
-        console.log(err);
-      } finally {
-        draggingRef.current = false;
-        onDragChange(false);
-        e.currentTarget.releasePointerCapture(e.pointerId);
       }
+
+      // End drag
+      draggingRef.current = false;
+      onDragChange(false);
+      e.currentTarget.releasePointerCapture(e.pointerId);
     },
     [editThreadMetadata, maxZIndex, thread, onDragChange]
   );
