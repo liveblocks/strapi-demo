@@ -7,12 +7,12 @@
   [dashboard](https://liveblocks.io/dashboard/apikeys).
 3. Create a new file, `nextjs-site/.env.local`, adding your secret key:
 ```bash
-LIVEBLOCKS_SECRET_KEY=
+LIVEBLOCKS_SECRET_KEY="LIVEBLOCKS_SECRET_KEY_HERE"
 STRAPI_BASE_URL=http://127.0.0.1:1337
 ```
 4. Create a new file, `strapi-cms/.env` adding your secret key:
 ```bash
-LIVEBLOCKS_SECRET_KEY=
+LIVEBLOCKS_SECRET_KEY="LIVEBLOCKS_SECRET_KEY_HERE"
 HOST=0.0.0.0
 PORT=1337
 APP_KEYS=FBLOQQbo8bWnHZqJ95s9KA==,M99BYUU0exAe41Z9qsZSyA==,Kbk51gjo25+xicjl3fNCFQ==,uTOxT189fqv0m2EEmXyAyg==
