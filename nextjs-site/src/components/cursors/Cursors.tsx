@@ -35,9 +35,12 @@ function CursorsComponent() {
     // On cursor move, update presence
     function handlePointerMove(e: PointerEvent) {
       const elementUnder = document.elementFromPoint(e.clientX, e.clientY);
+
       if (elementUnder) {
         const cursor = getCoordsFromElement(elementUnder, e.clientX, e.clientY);
         updateMyPresence({ cursor });
+      } else {
+        updateMyPresence({ cursor: null });
       }
     }
 

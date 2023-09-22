@@ -15,7 +15,7 @@ export function getCoordsFromPointerEvent<El>(
     (e as any)._savedComposedPath || e.composedPath() || (e as any).path;
 
   // Generate a set of CSS selectors using the path
-  const cursorSelectors = generateSelectors(pathArray)
+  const cursorSelectors = generateSelectors(pathArray);
 
   // Don't show cursor
   if (!cursorSelectors) {
@@ -48,7 +48,7 @@ export function getCoordsFromElement<El>(
   const pathArray: Element[] = composedPathForElement(target);
 
   // Generate a set of CSS selectors using the path
-  const cursorSelectors = generateSelectors(pathArray)
+  const cursorSelectors = generateSelectors(pathArray);
 
   // Don't show cursor
   if (!cursorSelectors) {
@@ -143,12 +143,9 @@ function generateSelectors(pathArray: Element[]): string[] | null {
   const strapiData =
     (lastElement as HTMLElement)?.dataset?.["strapi-editable"] || "";
 
-  return [
-    id,
-    nthChildPathFromLowestId,
-    nthChildPath,
-    classNamePath,
-  ].filter((selector) => selector)
+  return [id, nthChildPathFromLowestId, nthChildPath, classNamePath].filter(
+    (selector) => selector
+  );
 }
 
 export function getCoordsFromAccurateCursorPositions({
@@ -165,7 +162,8 @@ export function getCoordsFromAccurateCursorPositions({
       try {
         const el = document.querySelector(selector);
 
-        if (el) {
+        // If element exists and is visible
+        if (el && el.getClientRects().length) {
           const { top, left, width, height } = el.getBoundingClientRect();
           return {
             x: left + width * cursorX + window.scrollX,
@@ -173,7 +171,7 @@ export function getCoordsFromAccurateCursorPositions({
           };
         }
       } catch (err) {
-        // ignore
+        // Ignore errors if selectors don't work, and don't render cursors
       }
     }
   }
