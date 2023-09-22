@@ -1,6 +1,6 @@
 # strapi-demo
 
-## Get environment variables
+## Create environment variables
 
 1. Create an account on [liveblocks.io](https://liveblocks.io/dashboard)
 2. Copy your **secret** key from the
