@@ -3,7 +3,12 @@
 import { CSSProperties, useCallback, useState } from "react";
 import sanitizeHtml from "sanitize-html";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
-import { useBroadcastEvent, useEventListener, useOthers, useUpdateMyPresence } from "@/liveblocks.config";
+import {
+  useBroadcastEvent,
+  useEventListener,
+  useOthers,
+  useUpdateMyPresence,
+} from "@/liveblocks.config";
 
 import styles from "./EditableTextClient.module.css";
 import { shallow } from "@liveblocks/core";
@@ -123,9 +128,9 @@ export function EditableTextClient({
       />
       {focused ? <button onPointerDown={updateAttribute}>Save</button> : null}
       {othersEditing.length ? (
-        <div className={styles.OthersEditing}>
+        <span className={styles.OthersEditing}>
           {othersEditing.map((other) => (
-            <div
+            <span
               key={other.connectionId}
               className={styles.OtherEditing}
               style={
@@ -133,9 +138,9 @@ export function EditableTextClient({
               }
             >
               {other.info.name}
-            </div>
+            </span>
           ))}
-        </div>
+        </span>
       ) : null}
     </span>
   );
