@@ -45,3 +45,9 @@ Note that you'll get a `fetch` error the first time you run the project. To fix 
 2. Enable the API by going to Settings → Users & Permissions Plugin → Roles → Marketing-text, ticking `find` and `update`, then pressing Save.
 
 [iYRYlVfffy.webm](https://github.com/liveblocks/strapi-demo/assets/33033422/438ff596-485f-4916-a519-550a393c7e3e)
+
+3. Go to the Content Manager and Publish your content.
+
+[hoMvJNpA0w.webm](https://github.com/liveblocks/strapi-demo/assets/33033422/1716eb65-4a87-4873-86ad-5eafca4beb30)
+
+4. Refresh the Next.js project to see the data load correctly.
