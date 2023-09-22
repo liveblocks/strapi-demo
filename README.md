@@ -42,6 +42,6 @@ Note that you'll get a `fetch` error the first time you run the project. To fix 
 ## First time signing in
 
 1. After navigating to [`http://localhost:8000`](http://localhost:8000), sign up as a new user.
-2. Enable the API by going to Settings → Users & Permissions PLugin → Roles → Marketing-text, ticking `find` and `update`, then pressing Save.
+2. Enable the API by going to Settings → Users & Permissions Plugin → Roles → Marketing-text, ticking `find` and `update`, then pressing Save.
 
 [iYRYlVfffy.webm](https://github.com/liveblocks/strapi-demo/assets/33033422/438ff596-485f-4916-a519-550a393c7e3e)
