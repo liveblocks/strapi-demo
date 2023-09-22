@@ -1,27 +1,15 @@
-import { Article, Payload } from "@/types";
-
 const STRAPI_BASE_URL = process.env.STRAPI_BASE_URL;
 
-export async function getArticles() {
-  const response = await fetch(`${STRAPI_BASE_URL}/api/articles`);
-
-  if (!response.ok) {
-    throw Error("Error fetching Articles");
-  }
-
-  return ((await response.json()) as Payload<Article[]>).data;
-}
-
-export async function getArticle(slug: string) {
-  const response = await fetch(
-    `${STRAPI_BASE_URL}/api/articles?filters[Slug][$eq]=${slug}`
-  );
-
-  if (!response.ok) {
-    throw Error("Error fetching Article");
-  }
-
-  return ((await response.json()) as Payload<Article[]>).data[0];
+export interface Payload<T> {
+  data: T;
+  meta: {
+    pagination?: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
 }
 
 export async function getStrapiData(strapiApiId: string) {
@@ -30,6 +18,7 @@ export async function getStrapiData(strapiApiId: string) {
   });
 
   if (!response.ok) {
+    console.log(await response.json());
     throw Error("Error fetching Strapi data");
   }
 
@@ -51,7 +40,6 @@ export async function updateStrapiData(
   });
 
   if (!response.ok) {
-    console.log(body);
     console.log(await response.json());
     throw Error("Error updating Strapi data");
   }
