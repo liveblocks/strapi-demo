@@ -80,7 +80,9 @@ function OverlayThread({
         cursorX,
         cursorY,
       });
+
       if (!fromAccurateCoords) {
+        setCoords({ x: -10000, y: -10000 });
         return;
       }
 
