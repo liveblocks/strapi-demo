@@ -38,7 +38,7 @@ JWT_SECRET=Q5E1IK6k8DoKE12Slhgiaw==
 2. Open `nextjs-site` and use `npm run dev`.
 3. Find the Strapi admin, with comments plugin, at [`http://localhost:8000`](http://localhost:8000).
 4. Navigate to [`http://localhost:3000`](http://localhost:3000) to view the Next.js app.
-5.  
+
 Note that you'll get a `fetch` error the first time you run the Next.js project. To fix it, do this:
 
 ## First time signing in

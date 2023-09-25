@@ -1,12 +1,19 @@
 import "@/styles/globals.css";
 import type { Metadata } from "next";
-import { Archivo } from "next/font/google";
+import { Archivo, Inter } from "next/font/google";
 import { Header } from "@/components/site/Header";
 
 const archivo = Archivo({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-archivo",
+  weight: ["400", "500", "700"],
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
   weight: ["400", "500", "700"],
 });
 
@@ -35,7 +42,7 @@ export default function RootLayout({
           type="image/png"
         />
       </head>
-      <body className={archivo.variable}>
+      <body className={archivo.variable + " " + inter.className}>
         <Header />
         {children}
       </body>
