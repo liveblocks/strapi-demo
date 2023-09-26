@@ -49,7 +49,7 @@ function LiveblocksEditableText({
   const broadcast = useBroadcastEvent();
   const [text, setText] = useState(initial);
 
-  // Sanitize
+  // Sanitize and update text on changes
   const onContentChange = useCallback(
     (e: ContentEditableEvent) => {
       const sanitizeConf = {
@@ -60,7 +60,6 @@ function LiveblocksEditableText({
       const newText = sanitizeHtml(e.currentTarget.innerHTML, sanitizeConf);
       setText(newText);
 
-      // Uncomment this if you'd like the text to update as its typed
       if (UPDATE_TEXT_ON_EVERY_KEYPRESS) {
         broadcast({
           type: "editableTextUpdate",
