@@ -1,6 +1,6 @@
 # Strapi + Liveblocks demo
 
-![image](https://github.com/liveblocks/strapi-demo/assets/33033422/b02be364-8ea7-42a1-b813-ee14f94ce9e9)
+![269924690-b02be364-8ea7-42a1-b813-ee14f94ce9e9](https://github.com/liveblocks/strapi-demo/assets/33033422/71e9d624-6e3d-4808-bbb9-512cb76698eb)
 
 ## Create environment variables
 
@@ -46,13 +46,13 @@ Note that you'll get a `fetch` error the first time you run the Next.js project.
 1. After navigating to [`http://localhost:8000`](http://localhost:8000), sign up as a new user.
 2. Enable the API by going to Settings → Users & Permissions Plugin → Roles → Public → Marketing-text, ticking `find` and `update`, then pressing Save.
 
-[iYRYlVfffy.webm](https://github.com/liveblocks/strapi-demo/assets/33033422/438ff596-485f-4916-a519-550a393c7e3e)
+[269922424-438ff596-485f-4916-a519-550a393c7e3e.webm](https://github.com/liveblocks/strapi-demo/assets/33033422/d256e5f3-cc20-425c-8c9f-1098fa84a425)
 
 3. Go to the Content Manager and Publish your content.
 
-[hoMvJNpA0w.webm](https://github.com/liveblocks/strapi-demo/assets/33033422/1716eb65-4a87-4873-86ad-5eafca4beb30)
+[269924168-1716eb65-4a87-4873-86ad-5eafca4beb30.webm](https://github.com/liveblocks/strapi-demo/assets/33033422/147048f6-fe47-436e-93df-548f3bd1fe6d)
+
 
 4. Refresh the Next.js project to see the data load correctly.
 
-![image](https://github.com/liveblocks/strapi-demo/assets/33033422/b02be364-8ea7-42a1-b813-ee14f94ce9e9)
-
+![269924690-b02be364-8ea7-42a1-b813-ee14f94ce9e9](https://github.com/liveblocks/strapi-demo/assets/33033422/71e9d624-6e3d-4808-bbb9-512cb76698eb)
