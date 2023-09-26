@@ -9,10 +9,12 @@ import {
   useOthers,
   useUpdateMyPresence,
 } from "@/liveblocks.config";
-
 import styles from "./EditableTextClient.module.css";
 import { shallow } from "@liveblocks/core";
 import { ClientSideSuspense } from "@liveblocks/react";
+
+// Toggle real-time text updates
+const UPDATE_TEXT_ON_EVERY_KEYPRESS = false;
 
 type Props = {
   strapiApiId: string;
@@ -48,14 +50,28 @@ function LiveblocksEditableText({
   const [text, setText] = useState(initial);
 
   // Sanitize
-  const onContentChange = useCallback((e: ContentEditableEvent) => {
-    const sanitizeConf = {
-      allowedTags: ["b", "i", "a", "p"],
-      allowedAttributes: { a: ["href"] },
-    };
+  const onContentChange = useCallback(
+    (e: ContentEditableEvent) => {
+      const sanitizeConf = {
+        allowedTags: ["b", "i", "a", "p"],
+        allowedAttributes: { a: ["href"] },
+      };
 
-    setText(sanitizeHtml(e.currentTarget.innerHTML, sanitizeConf));
-  }, []);
+      const newText = sanitizeHtml(e.currentTarget.innerHTML, sanitizeConf);
+      setText(newText);
+
+      // Uncomment this if you'd like the text to update as its typed
+      if (UPDATE_TEXT_ON_EVERY_KEYPRESS) {
+        broadcast({
+          type: "editableTextUpdate",
+          strapiApiId,
+          attribute,
+          newText,
+        });
+      }
+    },
+    [broadcast, strapiApiId, attribute]
+  );
 
   // On save, send data to server component above
   const updateAttribute = useCallback(async () => {
@@ -83,12 +99,14 @@ function LiveblocksEditableText({
     }
 
     if (event.strapiApiId === strapiApiId && event.attribute === attribute) {
-      // Set text immediately from event to save 1 second
-      // setText(event.newText);
-
-      // Update text from Strapi just to be sure
-      const newText = await onRevalidate();
-      setText(newText);
+      if (UPDATE_TEXT_ON_EVERY_KEYPRESS) {
+        // Set text immediately from event
+        setText(event.newText);
+      } else {
+        // Update text from Strapi
+        const newText = await onRevalidate();
+        setText(newText);
+      }
     }
   });
 
