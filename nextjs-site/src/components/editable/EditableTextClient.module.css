@@ -1,6 +1,7 @@
 .EditableTextClient {
   position: relative;
   border-radius: 4px;
+  display: inline-block;
 }
 
 .EditableTextClient:hover {
@@ -65,6 +66,8 @@
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   line-height: 0.95;
+  letter-spacing: normal;
+  text-align: left;
 }
 
 .OtherEditing:first-of-type {

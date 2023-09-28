@@ -10,7 +10,7 @@ export async function PageLayers2() {
           position: "absolute",
           left: "140px",
           top: "250px",
-          fontSize: "60px",
+          fontSize: "50px",
           color: "rgba(255, 255, 255, 0.2)",
         }}
       >
