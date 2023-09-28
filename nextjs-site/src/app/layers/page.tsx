@@ -7,10 +7,11 @@ import { PageLayers } from "@/components/site/PageLayers";
 export default async function Home() {
   return (
     <Room>
-      <PageLayers />
-      <Cursors />
-      <Comments />
-      <EditableTextMenu />
+      <EditableTextMenu>
+        <PageLayers />
+        <Cursors />
+        <Comments />
+      </EditableTextMenu>
     </Room>
   );
 }

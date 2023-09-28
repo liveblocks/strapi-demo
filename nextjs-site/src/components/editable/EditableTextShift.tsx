@@ -1,108 +1,19 @@
 "use client";
 
-import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { ClientSideSuspense } from "@liveblocks/react";
-import * as ContextMenu from "@radix-ui/react-context-menu";
-import styles from "./EditableTextMenu.module.css";
 
-export function EditableTextMenu({ children }: { children: ReactNode }) {
+export function EditableTextMenu() {
   return (
-    <ClientSideSuspense fallback={<>{children}</>}>
-      {() => <LoadedEditableTextMenu>{children}</LoadedEditableTextMenu>}
+    <ClientSideSuspense fallback={null}>
+      {() => <LoadHookWhenLiveblocksLoaded />}
     </ClientSideSuspense>
   );
 }
 
-function LoadedEditableTextMenu({ children }: { children: ReactNode }) {
-  const [editableElements, setEditableElements] = useState<Element[]>([]);
-  const getCurrentElements = useCurrentElements();
-
-  const handleOpen = useCallback(
-    (open: boolean) => {
-      if (!open) {
-        setEditableElements([]);
-        return;
-      }
-
-      setEditableElements(getCurrentElements());
-    },
-    [getCurrentElements]
-  );
-
-  const handleSelect = useCallback((element: Element) => {
-    console.log(element);
-  }, []);
-
-  return (
-    <ContextMenu.Root onOpenChange={handleOpen}>
-      <ContextMenu.Trigger>{children}</ContextMenu.Trigger>
-      <ContextMenu.Portal>
-        <ContextMenu.Content className={styles.menu}>
-          {editableElements.map((editable: Element, index) => (
-            <ContextMenu.Item
-              key={index}
-              onSelect={() => handleSelect(editable)}
-              className={styles.menuItem}
-            >
-              {(editable as HTMLElement)?.innerText || editable.innerHTML}
-            </ContextMenu.Item>
-          ))}
-        </ContextMenu.Content>
-      </ContextMenu.Portal>
-    </ContextMenu.Root>
-  );
-}
-
-function useCurrentElements() {
-  const [currentElements, setCurrentElements] = useState<Element[]>([]);
-  const coords = useRef({ x: -10000, y: -10000 });
-
-  // Get current page coords
-  useEffect(() => {
-    function onPointerMove(e: PointerEvent) {
-      coords.current = { x: e.clientX, y: e.clientY };
-    }
-
-    window.addEventListener("pointermove", onPointerMove);
-
-    return () => {
-      window.removeEventListener("pointermove", onPointerMove);
-    };
-  }, []);
-
-  const getCurrentElements = useCallback(() => {
-    const { x, y } = coords.current;
-    const allElements = document.elementsFromPoint(x, y);
-
-    const editableElements: Element[] = [];
-    let hidableElements: Element[] = [];
-
-    // Find all editable text elements
-    allElements.forEach((el) => {
-      const isEditable = (el as HTMLElement)?.dataset.strapiEditable;
-      if (isEditable) {
-        editableElements.push(el);
-      } else {
-        hidableElements.push(el);
-      }
-    });
-
-    // Don't hide children of editable elements, e.g. the contentEditable element
-    hidableElements = hidableElements.filter((hidable) => {
-      return !editableElements.some((editable) => editable.contains(hidable));
-    });
-
-    // Make non-current elements click-through
-    // for (const el of hidableElements) {
-    //   if ("style" in (el as HTMLElement)) {
-    //     (el as HTMLElement).style.pointerEvents = "none";
-    //   }
-    // }
-
-    return editableElements;
-  }, []);
-
-  return getCurrentElements;
+function LoadHookWhenLiveblocksLoaded() {
+  useSelectElementsBelow();
+  return null;
 }
 
 function useSelectElementsBelow() {
