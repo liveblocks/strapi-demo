@@ -13,7 +13,7 @@ export default function Hero() {
             attribute={"HeroSubtitle"}
           />
         </div>
-        <h1>
+        <h1 className={styles.HeroTitle}>
           <EditableText
             strapiApiId={"marketing-text"}
             attribute={"HeroTitle"}

@@ -46,11 +46,9 @@
   opacity: 0.7;
 }
 
-.HeroWrapper > h1 {
+.HeroTitle {
+  position: relative;
   max-width: 860px;
-}
-
-.HeroWrapper > h1 [data-editable] {
   font-size: 80px;
   font-weight: 700;
   font-family: var(--font-archivo);
@@ -59,7 +57,17 @@
   letter-spacing: -0.015em;
 }
 
-.HeroDescription [data-editable] {
+.HeroTitleOverlay {
+  position: absolute;
+  top: -5px;
+  bottom: -2px;
+  left: -14px;
+  right: -14px;
+  background: #7af167;
+  opacity: 0.3;
+}
+
+.HeroDescription {
   font-size: var(--size-2xl);
   opacity: 0.7;
   text-align: center;
