@@ -14,9 +14,11 @@ export function EditableTextMenu({ children }: { children: ReactNode }) {
 }
 
 function LoadedEditableTextMenu({ children }: { children: ReactNode }) {
-  const [editableElements, setEditableElements] = useState<Element[]>([]);
+  const [editableElements, setEditableElements] = useState<HTMLElement[]>([]);
   const getCurrentElements = useCurrentElements();
+  const { hide, reset } = useHideElements();
 
+  // on menu open, set list of elements under current cursor
   const handleOpen = useCallback(
     (open: boolean) => {
       if (!open) {
@@ -29,22 +31,43 @@ function LoadedEditableTextMenu({ children }: { children: ReactNode }) {
     [getCurrentElements]
   );
 
-  const handleSelect = useCallback((element: Element) => {
-    console.log(element);
-  }, []);
+  const handleSelect = useCallback(
+    (element: HTMLElement) => {
+      const editable = element.querySelector("[data-editable]");
+      if (!editable || !(editable instanceof HTMLElement)) {
+        return;
+      }
+
+      setTimeout(() => {
+        // Hide overlapping elements and focus
+        hide(editable);
+        editable.focus();
+
+        // Reset overlapping elements on blur
+        editable.addEventListener(
+          "blur",
+          () => {
+            reset();
+          },
+          { once: true }
+        );
+      });
+    },
+    [hide, reset]
+  );
 
   return (
     <ContextMenu.Root onOpenChange={handleOpen}>
       <ContextMenu.Trigger>{children}</ContextMenu.Trigger>
       <ContextMenu.Portal>
         <ContextMenu.Content className={styles.menu}>
-          {editableElements.map((editable: Element, index) => (
+          {editableElements.map((element, index) => (
             <ContextMenu.Item
               key={index}
-              onSelect={() => handleSelect(editable)}
+              onSelect={() => handleSelect(element)}
               className={styles.menuItem}
             >
-              {(editable as HTMLElement)?.innerText || editable.innerHTML}
+              {element.innerText || element.innerHTML}
             </ContextMenu.Item>
           ))}
         </ContextMenu.Content>
@@ -53,24 +76,43 @@ function LoadedEditableTextMenu({ children }: { children: ReactNode }) {
   );
 }
 
-function useCurrentElements() {
-  const [currentElements, setCurrentElements] = useState<Element[]>([]);
-  const coords = useRef({ x: -10000, y: -10000 });
+function useHideElements() {
+  const initialStates = useRef<Map<Element, string>>(new Map());
+  const currentlyHidden = useRef<Element[]>([]);
 
-  // Get current page coords
-  useEffect(() => {
-    function onPointerMove(e: PointerEvent) {
-      coords.current = { x: e.clientX, y: e.clientY };
-    }
+  // Remove pointer events from all elements under or overlapping the current element
+  const hide = useCallback((element: HTMLElement) => {
+    const elementsToHide = getElementsInSameLocation(element);
 
-    window.addEventListener("pointermove", onPointerMove);
-
-    return () => {
-      window.removeEventListener("pointermove", onPointerMove);
-    };
+    elementsToHide.forEach((el) => {
+      if (el instanceof HTMLElement) {
+        initialStates.current.set(el, getComputedStyle(el).pointerEvents || "");
+        el.style.pointerEvents = "none";
+        currentlyHidden.current.push(el);
+      }
+    });
   }, []);
 
-  const getCurrentElements = useCallback(() => {
+  // Reset hidden elements to initial state
+  const reset = useCallback(() => {
+    for (const el of currentlyHidden.current) {
+      if (el instanceof HTMLElement && initialStates.current.get(el)) {
+        el.style.pointerEvents = initialStates.current.get(el) as string;
+      }
+    }
+
+    initialStates.current = new Map();
+    currentlyHidden.current = [];
+  }, []);
+
+  return { hide, reset };
+}
+
+function useCurrentElements() {
+  const coords = useCoords();
+
+  // Get all editable elements under the current cursor
+  return useCallback(() => {
     const { x, y } = coords.current;
     const allElements = document.elementsFromPoint(x, y);
 
@@ -92,139 +134,62 @@ function useCurrentElements() {
       return !editableElements.some((editable) => editable.contains(hidable));
     });
 
-    // Make non-current elements click-through
-    // for (const el of hidableElements) {
-    //   if ("style" in (el as HTMLElement)) {
-    //     (el as HTMLElement).style.pointerEvents = "none";
-    //   }
-    // }
-
-    return editableElements;
-  }, []);
-
-  return getCurrentElements;
+    // Filter out non-HTMLElements
+    return editableElements.filter((el) => {
+      return el instanceof HTMLElement;
+    }) as HTMLElement[];
+  }, [coords]);
 }
 
-function useSelectElementsBelow() {
-  const state = useRef<"default" | "selecting">("default");
-  const elements = useRef<Element[]>([]);
-  const hiddenElements = useRef<Element[]>([]);
-  const elementsPointerState = useRef<WeakMap<Element, string>>(new WeakMap());
-  const elementIndex = useRef<number>(0);
-  const selectedElement = useRef<Element | null>(null);
+// Get current page coords
+function useCoords() {
   const coords = useRef({ x: -10000, y: -10000 });
 
   useEffect(() => {
-    function resetPointerEvents() {}
-
-    // When mouse move, go back to default state
     function onPointerMove(e: PointerEvent) {
-      const { x, y } = coords.current;
-
-      if (state.current === "selecting") {
-        if (e.clientX !== x || e.clientY !== y) {
-          state.current = "default";
-          elementIndex.current = 0;
-
-          console.log("reset");
-          elementsPointerState.current;
-          unstyleCurrent(selectedElement.current);
-          hiddenElements.current.forEach((el) => {
-            if ("style" in (el as HTMLElement)) {
-              (el as HTMLElement).style.pointerEvents = "auto";
-            }
-          });
-          elements.current = [];
-          hiddenElements.current = [];
-        }
-      }
-
       coords.current = { x: e.clientX, y: e.clientY };
     }
 
-    function selectNextElement(e: KeyboardEvent) {
-      if (e.key !== "Shift") {
-        return;
-      }
-
-      if (state.current !== "selecting") {
-        state.current = "selecting";
-        console.log(2, state.current);
-      }
-
-      if (!elements.current.length) {
-        const { x, y } = coords.current;
-        elements.current = document.elementsFromPoint(x, y);
-      }
-
-      const editableElements: Element[] = [];
-      let hidableElements: Element[] = [];
-
-      // Find all editable text elements
-      elements.current.forEach((el) => {
-        const isEditable = (el as HTMLElement)?.dataset.strapiEditable;
-        if (isEditable) {
-          editableElements.push(el);
-        } else {
-          hidableElements.push(el);
-        }
-      });
-
-      // Don't hide children of editable elements, e.g. the contentEditable element
-      hidableElements = hidableElements.filter((hidable) => {
-        return !editableElements.some((editable) => editable.contains(hidable));
-      });
-      hiddenElements.current = hidableElements;
-
-      selectedElement.current = editableElements[
-        elementIndex.current % editableElements.length
-      ] as HTMLElement;
-
-      // Make non-current elements click-through
-      for (const el of hidableElements) {
-        if ("style" in (el as HTMLElement)) {
-          (el as HTMLElement).style.pointerEvents = "none";
-        }
-      }
-
-      styleCurrent(selectedElement.current);
-
-      console.log(editableElements);
-
-      // Increment element for next time
-      elementIndex.current++;
-    }
-
     window.addEventListener("pointermove", onPointerMove);
-    window.addEventListener("keydown", selectNextElement);
 
     return () => {
       window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("keydown", selectNextElement);
     };
   }, []);
 
-  // return { x: coords.x, y: coords.y, show: state === "menu" }
+  return coords;
 }
 
-function styleCurrent(currentElement: Element | null) {
-  if (currentElement) {
-    if ("style" in (currentElement as HTMLElement)) {
-      const el = currentElement as HTMLElement;
-      el.style.pointerEvents = "auto";
-      el.style.display = "block";
-      el.style.outline = "2px solid rgba(255, 255, 255, 0.4)";
-    }
-  }
-}
+// Return a list of elements that are in the same physical location as `element`
+function getElementsInSameLocation(element: Element) {
+  const rect = element.getBoundingClientRect();
+  const elements = new Map();
 
-function unstyleCurrent(currentElement: Element | null) {
-  if (currentElement) {
-    if ("style" in (currentElement as HTMLElement)) {
-      const el = currentElement as HTMLElement;
-      el.style.removeProperty("pointerEvents");
-      el.style.removeProperty("display");
-      el.style.removeProperty("outline");
+  // Checking every pixel is too much, so check every 50th instead
+  const step = 50;
+
+  for (let x = rect.left; x <= rect.right; x += step) {
+    for (let y = rect.top; y <= rect.bottom; y += step) {
+      const elementsAtPoint = document.elementsFromPoint(x, y);
+
+      for (const el of elementsAtPoint) {
+        // Ignore the target element and its children
+        if (el !== element && !element.contains(el)) {
+          elements.set(el, (elements.get(el) || 0) + 1);
+        }
+      }
     }
   }
+
+  const totalPoints =
+    Math.ceil(rect.width / step) * Math.ceil(rect.height / step);
+  const elementsInSameLocation: Element[] = [];
+
+  elements.forEach((count, el) => {
+    if (count === totalPoints) {
+      elementsInSameLocation.push(el);
+    }
+  });
+
+  return elementsInSameLocation;
 }

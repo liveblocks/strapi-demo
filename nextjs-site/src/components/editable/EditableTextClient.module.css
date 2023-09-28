@@ -7,7 +7,7 @@
   outline: 2px solid rgba(255, 255, 255, 0.2);
 }
 
-.EditableTextClient > button {
+.SaveButton {
   position: absolute;
   right: -1.5rem;
   transform: translate3d(100%, -50%, 0);
@@ -19,11 +19,13 @@
   border-radius: 4px;
   box-shadow: var(--shadow);
   background-color: var(--color-accent);
+  pointer-events: auto;
 }
 
 .EditableTextClient [data-editable] {
   border-radius: 4px;
   margin: 0 !important;
+  pointer-events: auto;
 }
 
 .EditableTextClient [data-editable]:hover {
